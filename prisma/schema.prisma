@@ -3,7 +3,7 @@
 // et DATABASE_URL par l'URL fournie par ton hébergeur (Neon, Vercel Postgres, Turso...).
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
