@@ -105,12 +105,13 @@ model Friendship {
 }
 
 model Invite {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   hostId          String
   message         String
   location        String
-  showRecipients  Boolean  @default(true)
-  createdAt       DateTime @default(now())
+  showRecipients  Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  cancelledAt     DateTime?
 
   host       User              @relation("HostInvites", fields: [hostId], references: [id])
   recipients InviteRecipient[]

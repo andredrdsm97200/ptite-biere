@@ -12,6 +12,7 @@ import CurseButton from "@/components/CurseButton";
 import RedeemButton from "@/components/RedeemButton";
 import MoodEffects from "@/components/MoodEffects";
 import BadgeInline from "@/components/BadgeInline";
+import CancelInviteButton from "@/components/CancelInviteButton";
 
 const statusLabel: Record<string, { text: string; className: string }> = {
   SENT: { text: "Pas encore vu", className: "pill" },
@@ -68,6 +69,12 @@ export default async function InvitePage({ params }: { params: { id: string } })
       </div>
 
       <div className="container">
+        {invite.cancelledAt && (
+          <div className="error-banner">
+            😢 {isHost ? "Tu as annulé" : `${invite.host.username} a annulé`} ce plan.
+          </div>
+        )}
+
         <div className="coaster">
           <p className="coaster-message">"{invite.message}"</p>
           <p className="coaster-from">
@@ -86,7 +93,13 @@ export default async function InvitePage({ params }: { params: { id: string } })
           </a>
         </div>
 
-        {!isHost && (
+        {isHost && !invite.cancelledAt && (
+          <div className="card">
+            <CancelInviteButton inviteId={invite.id} />
+          </div>
+        )}
+
+        {!isHost && !invite.cancelledAt && (
           <div className="card">
             <InviteActions inviteId={invite.id} currentStatus={myReceipt?.status ?? null} />
           </div>
@@ -108,7 +121,7 @@ export default async function InvitePage({ params }: { params: { id: string } })
                       </span>
                       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <span className={statusLabel[r.status].className}>{statusLabel[r.status].text}</span>
-                        {isHost && (
+                        {isHost && !invite.cancelledAt && (
                           <CurseButton
                             inviteId={invite.id}
                             recipientUserId={r.userId}

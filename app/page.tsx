@@ -28,14 +28,14 @@ export default async function DashboardPage() {
   const { start, end } = gameDayRange();
 
   const receivedRows = await prisma.inviteRecipient.findMany({
-    where: { userId: user.id, invite: { createdAt: { gte: start, lt: end } } },
+    where: { userId: user.id, invite: { createdAt: { gte: start, lt: end }, cancelledAt: null } },
     include: { invite: { include: { host: true } } },
     orderBy: { invite: { createdAt: "desc" } },
     take: 20,
   });
 
   const sent = await prisma.invite.findMany({
-    where: { hostId: user.id, createdAt: { gte: start, lt: end } },
+    where: { hostId: user.id, createdAt: { gte: start, lt: end }, cancelledAt: null },
     include: { recipients: { include: { user: true } } },
     orderBy: { createdAt: "desc" },
     take: 10,

@@ -20,7 +20,7 @@ export async function GET() {
     where: {
       userId: me.id,
       status: { in: ["SENT", "SEEN"] },
-      invite: { createdAt: { gte: start, lt: end } },
+      invite: { createdAt: { gte: start, lt: end }, cancelledAt: null },
     },
   });
 
