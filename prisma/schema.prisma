@@ -1,6 +1,6 @@
-// Schéma de la base de données.
-// En local : SQLite (fichier). En production : remplace "sqlite" par "postgresql"
-// et DATABASE_URL par l'URL fournie par ton hébergeur (Neon, Vercel Postgres, Turso...).
+// Schéma de la base de données — ce projet est configuré pour PostgreSQL
+// (Neon en production). Ne repasse jamais ce provider à "sqlite" dans les
+// prochains zips : la vraie base du projet est du Postgres.
 
 datasource db {
   provider = "postgresql"
