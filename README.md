@@ -34,15 +34,20 @@ Le protocole Web Push est géré directement par les navigateurs.
   des invités, visibilité des autres invités on/off.
 - Statut du jour "🍻 Chaud" / "🙅 Pas envie", journée de jeu 5h-5h (pas
   minuit) : tout se réinitialise chaque matin.
-- Carte en direct des amis "chauds" (position exacte, partagée uniquement
-  pendant que le statut est actif).
-- Classement (onglet 🏆) : meilleur hôte, plus chaud sans interruption, le
-  moins chaud, badge malédiction — calculé parmi soi + ses amis, cumulé
-  dans le temps.
-- Malédiction : l'hôte peut sanctionner un invité qui ne s'est pas présenté ;
-  bascule son thème en violet poison animé jusqu'au lendemain 5h.
-- Thème visuel qui s'adapte à l'humeur du moment (chaud / pas envie /
-  maudit), sur fond du thème clair "Terrasse d'été".
+- Classement (onglet 🏆) : classement général (score combiné) + catégories
+  détaillées (meilleur hôte, plus chaud sans interruption, le moins chaud,
+  badge malédiction) — calculé parmi soi + ses amis, cumulé dans le temps.
+  Les badges apparaissent à côté des pseudos partout dans l'appli, et sur
+  la page profil de chacun.
+- Malédiction avec de vraies conséquences : un maudit passe en quarantaine
+  (personne ne peut l'inviter jusqu'au lendemain 5h) et doit une "tournée
+  double" tant que l'hôte concerné ne l'a pas validée.
+- Annuler sa présence après avoir dit "j'arrive", avec un petit mot
+  optionnel, visible par l'hôte seul ou par tous les invités.
+- Pastilles de notification en temps réel (demandes d'amis, invitations non
+  répondues) et actualisation automatique de l'accueil et du classement.
+- Thème visuel qui s'adapte à l'humeur (chaud / pas envie / maudit), sur
+  fond du thème clair "Terrasse d'été".
 
 ## Démarrer en local
 

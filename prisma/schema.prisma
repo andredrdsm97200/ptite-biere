@@ -24,12 +24,6 @@ model User {
   drinkStatus     String?
   drinkStatusDate DateTime?
 
-  // Position exacte, capturée uniquement quand le statut passe à "AVAILABLE".
-  // N'est affichée aux amis que tant que drinkStatus est effectif (même jour).
-  latitude          Float?
-  longitude         Float?
-  locationUpdatedAt DateTime?
-
   // Abonnement aux notifications push (JSON stringifié : endpoint + clés)
   pushSubscription String?
 
@@ -59,11 +53,14 @@ model StatusLog {
 }
 
 // Une malédiction posée par un hôte sur un invité qui ne s'est pas présenté.
+// redeemed : passe à true quand la "tournée double" a été payée — la
+// malédiction compte toujours au classement, mais la dette est soldée.
 model Curse {
   id             String   @id @default(cuid())
   inviteId       String
   cursedUserId   String
   cursedByUserId String
+  redeemed       Boolean  @default(false)
   createdAt      DateTime @default(now())
 
   invite   Invite @relation(fields: [inviteId], references: [id])
@@ -103,10 +100,12 @@ model Invite {
 }
 
 model InviteRecipient {
-  id       String  @id @default(cuid())
-  inviteId String
-  userId   String
-  status   String  @default("SENT") // SENT, SEEN, JOINED, DECLINED
+  id             String  @id @default(cuid())
+  inviteId       String
+  userId         String
+  status         String  @default("SENT") // SENT, SEEN, JOINED, DECLINED, CANCELLED
+  note           String?
+  noteVisibility String? // "PUBLIC" | "HOST"
 
   invite Invite @relation(fields: [inviteId], references: [id])
   user   User   @relation(fields: [userId], references: [id])

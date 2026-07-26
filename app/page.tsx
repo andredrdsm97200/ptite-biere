@@ -3,20 +3,24 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { effectiveDrinkStatus } from "@/lib/drinkStatus";
-import { getUserMood } from "@/lib/mood";
+import { getUserMood, isCurseFresh } from "@/lib/mood";
+import { getCircle } from "@/lib/leaderboard";
+import { getBadgeMap } from "@/lib/badges";
 import { gameDayRange } from "@/lib/gameDay";
 import LogoutButton from "@/components/LogoutButton";
 import BottomNav from "@/components/BottomNav";
 import NotificationsCta from "@/components/NotificationsCta";
 import DrinkStatusToggle from "@/components/DrinkStatusToggle";
-import FriendsMapWrapper from "@/components/FriendsMapWrapper";
 import MoodEffects from "@/components/MoodEffects";
+import BadgeInline from "@/components/BadgeInline";
+import AutoRefresh from "@/components/AutoRefresh";
 
 const statusLabel: Record<string, { text: string; className: string }> = {
   SENT: { text: "Envoyée", className: "pill" },
   SEEN: { text: "Vue", className: "pill" },
   JOINED: { text: "J'y serai 🍻", className: "pill pill-cheers" },
   DECLINED: { text: "Décliné", className: "pill pill-decline" },
+  CANCELLED: { text: "A annulé", className: "pill pill-decline" },
 };
 
 export default async function DashboardPage() {
@@ -24,6 +28,9 @@ export default async function DashboardPage() {
   if (!user) redirect("/login");
 
   const mood = await getUserMood(user.id, user.drinkStatus, user.drinkStatusDate);
+  const intense = mood === "cursed" ? await isCurseFresh(user.id) : false;
+  const circle = await getCircle(user.id);
+  const badgeMap = await getBadgeMap(circle);
 
   // La soirée du jour disparaît de l'accueil à 5h du matin (mais reste en
   // base pour les classements et les malédictions du lendemain).
@@ -44,8 +51,9 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="screen" data-mood={mood}>
-      <MoodEffects mood={mood} />
+    <div className={`screen ${intense ? "mood-intense" : ""}`} data-mood={mood}>
+      <MoodEffects mood={mood} intense={intense} />
+      <AutoRefresh />
       <div className="topbar">
         <div className="brand">
           <span className="brand-mark">🍺</span> P'tite bière ?
@@ -60,8 +68,6 @@ export default async function DashboardPage() {
 
         <DrinkStatusToggle initialStatus={effectiveDrinkStatus(user.drinkStatus, user.drinkStatusDate)} />
 
-        <FriendsMapWrapper />
-
         <NotificationsCta />
 
         <Link href="/invite/new" className="btn btn-primary" style={{ marginTop: 6, textDecoration: "none" }}>
@@ -75,7 +81,10 @@ export default async function DashboardPage() {
         {receivedRows.map((r) => (
           <Link key={r.id} href={`/invite/${r.invite.id}`} className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
             <div className="row">
-              <strong>{r.invite.host.username}</strong>
+              <strong>
+                {r.invite.host.username}
+                <BadgeInline badges={badgeMap[r.invite.hostId]} />
+              </strong>
               <span className={statusLabel[r.status].className}>{statusLabel[r.status].text}</span>
             </div>
             <p style={{ marginTop: 8, fontSize: 14, color: "var(--foam-dim)" }}>

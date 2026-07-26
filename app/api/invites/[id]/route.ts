@@ -46,8 +46,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const me = await getCurrentUser();
   if (!me) return NextResponse.json({ error: "Non connecté." }, { status: 401 });
 
-  const { status } = await req.json();
-  if (!["JOINED", "DECLINED"].includes(status)) {
+  const { status, note, noteVisibility } = await req.json();
+  if (!["JOINED", "DECLINED", "CANCELLED"].includes(status)) {
     return NextResponse.json({ error: "Statut invalide." }, { status: 400 });
   }
 
@@ -56,6 +56,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   });
   if (!receipt) return NextResponse.json({ error: "Introuvable." }, { status: 404 });
 
-  await prisma.inviteRecipient.update({ where: { id: receipt.id }, data: { status } });
+  const data: { status: string; note?: string | null; noteVisibility?: string | null } = { status };
+  if (status === "CANCELLED") {
+    data.note = note?.trim() ? note.trim().slice(0, 280) : null;
+    data.noteVisibility = noteVisibility === "PUBLIC" ? "PUBLIC" : "HOST";
+  }
+
+  await prisma.inviteRecipient.update({ where: { id: receipt.id }, data });
   return NextResponse.json({ ok: true });
 }

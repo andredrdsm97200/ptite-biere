@@ -2,18 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import BadgeInline from "./BadgeInline";
 
 type Friend = { id: string; username: string };
 type Pending = { friendshipId: string; id: string; username: string };
+type BadgeIcon = { icon: string; title: string };
 
 export default function FriendsManager({
   accepted,
   incoming,
   outgoing,
+  badgeMap = {},
 }: {
   accepted: Friend[];
   incoming: Pending[];
   outgoing: Pending[];
+  badgeMap?: Record<string, BadgeIcon[]>;
 }) {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -110,7 +115,10 @@ export default function FriendsManager({
       {accepted.length === 0 && <div className="empty">Pas encore d'amis ici. Ajoute-en un pour lancer ta première tournée.</div>}
       {accepted.map((f) => (
         <div key={f.id} className="card">
-          {f.username}
+          <Link href={`/u/${f.username}`} style={{ textDecoration: "none", color: "inherit" }}>
+            {f.username}
+          </Link>
+          <BadgeInline badges={badgeMap[f.id]} />
         </div>
       ))}
     </div>

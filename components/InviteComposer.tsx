@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Friend = { id: string; username: string; status?: "AVAILABLE" | "UNAVAILABLE" | null };
+type Friend = { id: string; username: string; blocked?: "UNAVAILABLE" | "CURSED" | null };
 
 const QUICK_MESSAGES = [
   "Je finis le taff dans 10 min, ça vous dit ?",
@@ -97,7 +97,7 @@ export default function InviteComposer({ friends }: { friends: Friend[] }) {
       <div className="section-title">À qui ?</div>
       {friends.map((f) => {
         const checked = selected.includes(f.id);
-        const blocked = f.status === "UNAVAILABLE";
+        const blocked = !!f.blocked;
         return (
           <div
             key={f.id}
@@ -107,8 +107,8 @@ export default function InviteComposer({ friends }: { friends: Friend[] }) {
           >
             <input type="checkbox" checked={checked} disabled={blocked} readOnly />
             <span style={{ flex: 1 }}>{f.username}</span>
-            {f.status === "AVAILABLE" && <span className="pill pill-cheers">🍻 chaud</span>}
-            {blocked && <span className="pill pill-decline">Pas dispo aujourd'hui</span>}
+            {f.blocked === "CURSED" && <span className="pill pill-cursed">🔮 En quarantaine</span>}
+            {f.blocked === "UNAVAILABLE" && <span className="pill pill-decline">Pas dispo aujourd'hui</span>}
           </div>
         );
       })}

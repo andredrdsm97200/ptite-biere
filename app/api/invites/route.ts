@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { sendPush } from "@/lib/push";
-import { effectiveDrinkStatus } from "@/lib/drinkStatus";
+import { getInviteBlockReasons } from "@/lib/invitable";
 
 export async function GET() {
   const me = await getCurrentUser();
@@ -67,16 +67,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // On exclut tout ami ayant déclaré ne pas être disponible aujourd'hui,
-  // même si la requête essaie de le forcer.
-  const candidates = await prisma.user.findMany({ where: { id: { in: candidateIds } } });
-  const validRecipientIds = candidates
-    .filter((u) => effectiveDrinkStatus(u.drinkStatus, u.drinkStatusDate) !== "UNAVAILABLE")
-    .map((u) => u.id);
+  // On exclut tout ami en quarantaine (maudit aujourd'hui) ou ayant déclaré
+  // ne pas être disponible — même si la requête essaie de le forcer.
+  const blockReasons = await getInviteBlockReasons(candidateIds);
+  const validRecipientIds = candidateIds.filter((id: string) => !blockReasons[id]);
 
   if (validRecipientIds.length === 0) {
     return NextResponse.json(
-      { error: "Ces amis ont indiqué ne pas être disponibles aujourd'hui." },
+      { error: "Ces amis ne sont pas disponibles aujourd'hui (pas chauds, ou maudits en quarantaine)." },
       { status: 400 }
     );
   }

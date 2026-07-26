@@ -23,3 +23,13 @@ export async function getUserMood(
   if (status === "UNAVAILABLE") return "cold";
   return "neutral";
 }
+
+// Le poison est plus virulent dans les 10 minutes qui suivent la malédiction,
+// puis se calme — un petit "aïe" initial plutôt qu'un effet plat.
+export async function isCurseFresh(userId: string): Promise<boolean> {
+  const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000);
+  const fresh = await prisma.curse.findFirst({
+    where: { cursedUserId: userId, createdAt: { gte: tenMinAgo } },
+  });
+  return !!fresh;
+}

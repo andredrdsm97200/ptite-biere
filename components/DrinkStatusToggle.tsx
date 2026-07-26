@@ -9,58 +9,18 @@ export default function DrinkStatusToggle({ initialStatus }: { initialStatus: St
   const router = useRouter();
   const [status, setStatus] = useState<Status>(initialStatus);
   const [loading, setLoading] = useState(false);
-  const [locationNote, setLocationNote] = useState("");
 
   async function save(next: Status) {
     const previous = status;
     setStatus(next);
-    setLocationNote("");
     setLoading(true);
-
     const res = await fetch("/api/profile/drink-status", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: next }),
     });
-
-    if (!res.ok) {
-      setStatus(previous);
-      setLoading(false);
-      return;
-    }
-
-    if (next === "AVAILABLE") {
-      // Position capturée une seule fois (pas de suivi en continu), et
-      // uniquement quand on se déclare "chaud" — jamais en silence.
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          async (pos) => {
-            await fetch("/api/profile/location", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                latitude: pos.coords.latitude,
-                longitude: pos.coords.longitude,
-              }),
-            });
-            setLocationNote("📍 Position partagée avec tes amis tant que tu es \"chaud\".");
-            setLoading(false);
-            router.refresh();
-          },
-          () => {
-            setLocationNote("Statut activé — position non partagée (autorisation refusée).");
-            setLoading(false);
-            router.refresh();
-          }
-        );
-        return;
-      }
-    } else {
-      // On retire sa position dès qu'on n'est plus "chaud".
-      await fetch("/api/profile/location", { method: "DELETE" });
-    }
-
     setLoading(false);
+    if (!res.ok) setStatus(previous);
     router.refresh();
   }
 
@@ -74,7 +34,7 @@ export default function DrinkStatusToggle({ initialStatus }: { initialStatus: St
         <div>
           <strong style={{ fontSize: 14 }}>🍻 Chaud pour une bière</strong>
           <p style={{ fontSize: 12, color: "var(--foam-dim)", margin: 0 }}>
-            Visible par tes potes, avec ta position exacte, tant que c'est activé.
+            Tes potes le verront quand ils lancent un appel.
           </p>
         </div>
         <div
@@ -99,12 +59,6 @@ export default function DrinkStatusToggle({ initialStatus }: { initialStatus: St
           <div className="knob" />
         </div>
       </div>
-
-      {locationNote && (
-        <p style={{ fontSize: 12, color: "var(--foam-dim)", marginTop: 10, marginBottom: 0 }}>
-          {locationNote}
-        </p>
-      )}
     </div>
   );
 }

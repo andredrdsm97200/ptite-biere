@@ -1,18 +1,24 @@
 import { redirect, notFound } from "next/navigation";
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { getUserMood } from "@/lib/mood";
+import { getUserMood, isCurseFresh } from "@/lib/mood";
+import { getCircle } from "@/lib/leaderboard";
+import { getBadgeMap } from "@/lib/badges";
 import LogoutButton from "@/components/LogoutButton";
 import BottomNav from "@/components/BottomNav";
 import InviteActions from "@/components/InviteActions";
 import CurseButton from "@/components/CurseButton";
+import RedeemButton from "@/components/RedeemButton";
 import MoodEffects from "@/components/MoodEffects";
+import BadgeInline from "@/components/BadgeInline";
 
 const statusLabel: Record<string, { text: string; className: string }> = {
   SENT: { text: "Pas encore vu", className: "pill" },
   SEEN: { text: "Vu", className: "pill" },
   JOINED: { text: "J'y serai", className: "pill pill-cheers" },
   DECLINED: { text: "Décliné", className: "pill pill-decline" },
+  CANCELLED: { text: "A annulé", className: "pill pill-decline" },
 };
 
 export default async function InvitePage({ params }: { params: { id: string } }) {
@@ -37,12 +43,23 @@ export default async function InvitePage({ params }: { params: { id: string } })
   }
 
   const mood = await getUserMood(me.id, me.drinkStatus, me.drinkStatusDate);
+  const intense = mood === "cursed" ? await isCurseFresh(me.id) : false;
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(invite.location)}`;
   const cursedIds = new Set(invite.curses.map((c) => c.cursedUserId));
 
+  const circle = await getCircle(me.id);
+  const badgeMap = await getBadgeMap(circle);
+
+  // Dettes de "tournée double" en cours, pour chaque invité présent.
+  const joinedIds = invite.recipients.filter((r) => r.status === "JOINED").map((r) => r.userId);
+  const unpaidCurses = joinedIds.length
+    ? await prisma.curse.findMany({ where: { cursedUserId: { in: joinedIds }, redeemed: false } })
+    : [];
+  const debtorIds = new Set(unpaidCurses.map((c) => c.cursedUserId));
+
   return (
-    <div className="screen" data-mood={mood}>
-      <MoodEffects mood={mood} />
+    <div className={`screen ${intense ? "mood-intense" : ""}`} data-mood={mood}>
+      <MoodEffects mood={mood} intense={intense} />
       <div className="topbar">
         <div className="brand">
           <span className="brand-mark">🍺</span> Invitation
@@ -53,7 +70,10 @@ export default async function InvitePage({ params }: { params: { id: string } })
       <div className="container">
         <div className="coaster">
           <p className="coaster-message">"{invite.message}"</p>
-          <p className="coaster-from">— {invite.host.username}</p>
+          <p className="coaster-from">
+            — {invite.host.username}
+            <BadgeInline badges={badgeMap[invite.hostId]} />
+          </p>
         </div>
 
         <div className="card">
@@ -76,26 +96,46 @@ export default async function InvitePage({ params }: { params: { id: string } })
           <>
             <div className="section-title">Qui est invité</div>
             <div className="card">
-              {invite.recipients.map((r) => (
-                <div key={r.id} className="row" style={{ padding: "8px 0" }}>
-                  <span>{r.user.username}</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span className={statusLabel[r.status].className}>{statusLabel[r.status].text}</span>
-                    {isHost && (
-                      <CurseButton
-                        inviteId={invite.id}
-                        recipientUserId={r.userId}
-                        alreadyCursed={cursedIds.has(r.userId)}
-                      />
+              {invite.recipients.map((r) => {
+                const showNote = r.note && (r.noteVisibility === "PUBLIC" || isHost);
+                const hasDebt = debtorIds.has(r.userId) && r.status === "JOINED";
+                return (
+                  <div key={r.id} style={{ padding: "8px 0" }}>
+                    <div className="row">
+                      <span>
+                        {r.user.username}
+                        <BadgeInline badges={badgeMap[r.userId]} />
+                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span className={statusLabel[r.status].className}>{statusLabel[r.status].text}</span>
+                        {isHost && (
+                          <CurseButton
+                            inviteId={invite.id}
+                            recipientUserId={r.userId}
+                            alreadyCursed={cursedIds.has(r.userId)}
+                          />
+                        )}
+                      </div>
+                    </div>
+                    {showNote && (
+                      <p style={{ fontSize: 12, color: "var(--foam-dim)", fontStyle: "italic", marginTop: 4 }}>
+                        "{r.note}" {r.noteVisibility === "HOST" && isHost ? "(visible par toi seul)" : ""}
+                      </p>
+                    )}
+                    {hasDebt && (
+                      <div className="row" style={{ marginTop: 4 }}>
+                        <span className="pill pill-cursed">🍻🍻 Doit une tournée double (malédiction impayée)</span>
+                        {isHost && <RedeemButton inviteId={invite.id} recipientUserId={r.userId} />}
+                      </div>
                     )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             {isHost && (
               <p style={{ fontSize: 12, color: "var(--foam-dim)", marginTop: -6 }}>
                 Un pote annoncé mais jamais venu ? Tu peux le maudire — son thème
-                passera au poison jusqu'à demain 5h.
+                passera au poison, et plus personne ne pourra l'inviter jusqu'à demain 5h.
               </p>
             )}
           </>
