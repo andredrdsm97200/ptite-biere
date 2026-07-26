@@ -3,12 +3,18 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { startRegistration } from "@simplewebauthn/browser";
+import { enablePushNotifications } from "@/lib/push-client";
+import { IconBeer } from "@/components/icons";
+
+type Step = "form" | "notifications" | "faceid";
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref");
 
+  const [step, setStep] = useState<Step>("form");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -31,8 +37,79 @@ function RegisterForm() {
       setError(data.error || "Une erreur est survenue.");
       return;
     }
+    setStep("notifications");
+  }
+
+  async function handleEnableNotifications() {
+    setLoading(true);
+    await enablePushNotifications();
+    setLoading(false);
+    setStep("faceid");
+  }
+
+  async function handleEnableFaceId() {
+    setLoading(true);
+    setError("");
+    try {
+      const optionsRes = await fetch("/api/webauthn/register-options", { method: "POST" });
+      const options = await optionsRes.json();
+      const attestation = await startRegistration({ optionsJSON: options });
+      await fetch("/api/webauthn/register-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(attestation),
+      });
+    } catch {
+      // annulé ou non supporté par l'appareil — on n'en fait pas un drame
+    }
+    setLoading(false);
+    finishOnboarding();
+  }
+
+  function finishOnboarding() {
     router.push("/");
     router.refresh();
+  }
+
+  if (step === "notifications") {
+    return (
+      <div className="auth-card" style={{ textAlign: "center" }}>
+        <div className="auth-logo">🔔</div>
+        <h1 className="auth-title">Active les notifications</h1>
+        <p className="auth-sub">
+          Pour recevoir un "P'tite bière ?" même quand l'appli est fermée. On ne te le
+          redemandera plus après ça.
+        </p>
+        <button className="btn btn-primary" disabled={loading} onClick={handleEnableNotifications}>
+          {loading ? "..." : "🔔 Activer"}
+        </button>
+        <button className="link-muted" style={{ marginTop: 14, display: "block", width: "100%" }} onClick={() => setStep("faceid")}>
+          Plus tard
+        </button>
+      </div>
+    );
+  }
+
+  if (step === "faceid") {
+    return (
+      <div className="auth-card" style={{ textAlign: "center" }}>
+        <div className="auth-logo">
+          <IconBeer size={40} />
+        </div>
+        <h1 className="auth-title">Face ID / Touch ID ?</h1>
+        <p className="auth-sub">
+          Pour retrouver l'appli d'un coup de regard, sans retaper ton mot de passe à chaque
+          réouverture.
+        </p>
+        {error && <div className="error-banner">{error}</div>}
+        <button className="btn btn-primary" disabled={loading} onClick={handleEnableFaceId}>
+          {loading ? "..." : "🔐 Activer"}
+        </button>
+        <button className="link-muted" style={{ marginTop: 14, display: "block", width: "100%" }} onClick={finishOnboarding}>
+          Plus tard
+        </button>
+      </div>
+    );
   }
 
   return (

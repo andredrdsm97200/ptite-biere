@@ -53,3 +53,14 @@ export function IconTrophy({ size = 22, className }: IconProps) {
     </svg>
   );
 }
+
+export function IconSleep({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <circle cx="10.5" cy="12" r="6.5" />
+      <path d="M8.3 10c.3-.5.9-.8 1.6-.8" />
+      <path d="M8.5 15c.6.6 1.4 1 2.3 1s1.7-.4 2.3-1" />
+      <path d="M17 5.5h3l-3 3h3" />
+    </svg>
+  );
+}

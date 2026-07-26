@@ -9,19 +9,10 @@ import { getBadgeMap } from "@/lib/badges";
 import { gameDayRange } from "@/lib/gameDay";
 import LogoutButton from "@/components/LogoutButton";
 import BottomNav from "@/components/BottomNav";
-import NotificationsCta from "@/components/NotificationsCta";
 import DrinkStatusToggle from "@/components/DrinkStatusToggle";
 import MoodEffects from "@/components/MoodEffects";
-import BadgeInline from "@/components/BadgeInline";
 import AutoRefresh from "@/components/AutoRefresh";
-
-const statusLabel: Record<string, { text: string; className: string }> = {
-  SENT: { text: "Envoyée", className: "pill" },
-  SEEN: { text: "Vue", className: "pill" },
-  JOINED: { text: "J'y serai 🍻", className: "pill pill-cheers" },
-  DECLINED: { text: "Décliné", className: "pill pill-decline" },
-  CANCELLED: { text: "A annulé", className: "pill pill-decline" },
-};
+import PlansSection from "@/components/PlansSection";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -62,52 +53,30 @@ export default async function DashboardPage() {
       </div>
 
       <div className="container">
-        <p style={{ color: "var(--foam-dim)", marginBottom: 18 }}>
+        <p style={{ color: "var(--foam-dim)", marginBottom: 14 }}>
           Salut {user.username} 👋
         </p>
 
         <DrinkStatusToggle initialStatus={effectiveDrinkStatus(user.drinkStatus, user.drinkStatusDate)} />
 
-        <NotificationsCta />
-
-        <Link href="/invite/new" className="btn btn-primary" style={{ marginTop: 6, textDecoration: "none" }}>
+        <Link href="/invite/new" className="btn btn-primary" style={{ marginBottom: 18, textDecoration: "none" }}>
           🍻 Lancer un appel
         </Link>
 
-        <div className="section-title">Invitations reçues (ce soir)</div>
-        {receivedRows.length === 0 && (
-          <div className="empty">Aucune invitation pour l'instant. Ça ne va pas durer.</div>
-        )}
-        {receivedRows.map((r) => (
-          <Link key={r.id} href={`/invite/${r.invite.id}`} className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
-            <div className="row">
-              <strong>
-                {r.invite.host.username}
-                <BadgeInline badges={badgeMap[r.invite.hostId]} />
-              </strong>
-              <span className={statusLabel[r.status].className}>{statusLabel[r.status].text}</span>
-            </div>
-            <p style={{ marginTop: 8, fontSize: 14, color: "var(--foam-dim)" }}>
-              {r.invite.message.length > 90 ? r.invite.message.slice(0, 90) + "…" : r.invite.message}
-            </p>
-          </Link>
-        ))}
-
-        <div className="section-title">Tes appels envoyés (ce soir)</div>
-        {sent.length === 0 && <div className="empty">Tu n'as encore invité personne ce soir.</div>}
-        {sent.map((invite) => (
-          <Link key={invite.id} href={`/invite/${invite.id}`} className="card" style={{ display: "block", textDecoration: "none", color: "inherit" }}>
-            <div className="row">
-              <strong>{invite.location}</strong>
-              <span className="pill">
-                {invite.recipients.filter((r) => r.status === "JOINED").length}/{invite.recipients.length} ok
-              </span>
-            </div>
-            <p style={{ marginTop: 8, fontSize: 14, color: "var(--foam-dim)" }}>
-              {invite.message.length > 90 ? invite.message.slice(0, 90) + "…" : invite.message}
-            </p>
-          </Link>
-        ))}
+        <PlansSection
+          received={receivedRows.map((r) => ({
+            id: r.id,
+            status: r.status,
+            invite: { id: r.invite.id, host: { username: r.invite.host.username }, hostId: r.invite.hostId, message: r.invite.message },
+          }))}
+          sent={sent.map((s) => ({
+            id: s.id,
+            location: s.location,
+            message: s.message,
+            recipients: s.recipients.map((r) => ({ status: r.status })),
+          }))}
+          badgeMap={badgeMap}
+        />
       </div>
 
       <BottomNav />

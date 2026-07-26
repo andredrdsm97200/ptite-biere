@@ -27,6 +27,10 @@ model User {
   // Abonnement aux notifications push (JSON stringifié : endpoint + clés)
   pushSubscription String?
 
+  // Défi temporaire WebAuthn (Face ID / biométrie), le temps d'une cérémonie
+  // d'enregistrement ou de connexion. Effacé juste après usage.
+  currentChallenge String?
+
   invitesSent     Invite[]          @relation("HostInvites")
   inviteReceipts  InviteRecipient[]
 
@@ -36,6 +40,20 @@ model User {
   statusLogs     StatusLog[]
   cursesReceived Curse[]     @relation("CursedUser")
   cursesGiven    Curse[]     @relation("CursedBy")
+  credentials    Credential[]
+}
+
+// Une clé d'accès biométrique (Face ID, Touch ID, empreinte Android...)
+// enregistrée sur un appareil pour se reconnecter sans mot de passe.
+model Credential {
+  id           String   @id // credential ID encodé en base64url, fourni par l'appareil
+  userId       String
+  publicKey    Bytes
+  counter      BigInt   @default(0)
+  deviceLabel  String?
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 // Historique quotidien du statut "chaud"/"pas chaud", utilisé pour calculer

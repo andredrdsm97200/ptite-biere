@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconBeer, IconSleep } from "./icons";
 
 type Status = "AVAILABLE" | "UNAVAILABLE" | null;
 
@@ -25,39 +26,28 @@ export default function DrinkStatusToggle({ initialStatus }: { initialStatus: St
   }
 
   return (
-    <div className="card">
-      <div className="section-title" style={{ margin: 0, marginBottom: 4 }}>
-        Envie de boire aujourd'hui ?
-      </div>
-
-      <div className="toggle-row">
-        <div>
-          <strong style={{ fontSize: 14 }}>🍻 Chaud pour une bière</strong>
-          <p style={{ fontSize: 12, color: "var(--foam-dim)", margin: 0 }}>
-            Tes potes le verront quand ils lancent un appel.
-          </p>
-        </div>
+    <div className="mood-picker">
+      <p className="mood-picker-label">Envie de boire aujourd'hui ?</p>
+      <div className="mood-picker-track">
         <div
-          className={`switch switch-cheers ${status === "AVAILABLE" ? "on" : ""}`}
-          onClick={() => !loading && save(status === "AVAILABLE" ? null : "AVAILABLE")}
+          className={`mood-picker-fill ${status === "AVAILABLE" ? "hot" : status === "UNAVAILABLE" ? "cold" : "neutral"}`}
+        />
+        <button
+          className={`mood-picker-btn ${status === "AVAILABLE" ? "active" : ""}`}
+          disabled={loading}
+          onClick={() => save(status === "AVAILABLE" ? null : "AVAILABLE")}
         >
-          <div className="knob" />
-        </div>
-      </div>
-
-      <div className="toggle-row">
-        <div>
-          <strong style={{ fontSize: 14 }}>🙅 Pas envie aujourd'hui</strong>
-          <p style={{ fontSize: 12, color: "var(--foam-dim)", margin: 0 }}>
-            Personne ne pourra t'inviter tant que c'est activé.
-          </p>
-        </div>
-        <div
-          className={`switch switch-decline ${status === "UNAVAILABLE" ? "on" : ""}`}
-          onClick={() => !loading && save(status === "UNAVAILABLE" ? null : "UNAVAILABLE")}
+          <IconBeer size={18} />
+          Chaud
+        </button>
+        <button
+          className={`mood-picker-btn ${status === "UNAVAILABLE" ? "active" : ""}`}
+          disabled={loading}
+          onClick={() => save(status === "UNAVAILABLE" ? null : "UNAVAILABLE")}
         >
-          <div className="knob" />
-        </div>
+          <IconSleep size={18} />
+          Pas envie
+        </button>
       </div>
     </div>
   );

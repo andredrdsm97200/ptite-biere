@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import PushManager from "@/components/PushManager";
+import BiometricGate from "@/components/BiometricGate";
 
 export const metadata: Metadata = {
   title: "P'tite bière ?",
@@ -27,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        {children}
+        <BiometricGate>{children}</BiometricGate>
         <PushManager />
       </body>
     </html>
