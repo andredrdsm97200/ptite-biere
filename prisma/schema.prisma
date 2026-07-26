@@ -1,0 +1,115 @@
+// Schéma de la base de données.
+// En local : SQLite (fichier). En production : remplace "sqlite" par "postgresql"
+// et DATABASE_URL par l'URL fournie par ton hébergeur (Neon, Vercel Postgres, Turso...).
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  phone        String?  @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  // Statut du jour : "AVAILABLE" (chaud), "UNAVAILABLE" (pas aujourd'hui), ou null (rien dit).
+  // drinkStatusDate sert à faire expirer automatiquement le statut le lendemain.
+  drinkStatus     String?
+  drinkStatusDate DateTime?
+
+  // Position exacte, capturée uniquement quand le statut passe à "AVAILABLE".
+  // N'est affichée aux amis que tant que drinkStatus est effectif (même jour).
+  latitude          Float?
+  longitude         Float?
+  locationUpdatedAt DateTime?
+
+  // Abonnement aux notifications push (JSON stringifié : endpoint + clés)
+  pushSubscription String?
+
+  invitesSent     Invite[]          @relation("HostInvites")
+  inviteReceipts  InviteRecipient[]
+
+  friendshipsA Friendship[] @relation("UserA")
+  friendshipsB Friendship[] @relation("UserB")
+
+  statusLogs     StatusLog[]
+  cursesReceived Curse[]     @relation("CursedUser")
+  cursesGiven    Curse[]     @relation("CursedBy")
+}
+
+// Historique quotidien du statut "chaud"/"pas chaud", utilisé pour calculer
+// les classements (séries, nombre de refus...). gameDay = début de la
+// "journée de jeu" (5h du matin) à laquelle ce statut se rapporte.
+model StatusLog {
+  id      String   @id @default(cuid())
+  userId  String
+  gameDay DateTime
+  status  String // "AVAILABLE" | "UNAVAILABLE"
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, gameDay])
+}
+
+// Une malédiction posée par un hôte sur un invité qui ne s'est pas présenté.
+model Curse {
+  id             String   @id @default(cuid())
+  inviteId       String
+  cursedUserId   String
+  cursedByUserId String
+  createdAt      DateTime @default(now())
+
+  invite   Invite @relation(fields: [inviteId], references: [id])
+  cursedUser   User @relation("CursedUser", fields: [cursedUserId], references: [id])
+  cursedBy     User @relation("CursedBy", fields: [cursedByUserId], references: [id])
+
+  @@unique([inviteId, cursedUserId])
+}
+
+// Une amitié est stockée une seule fois entre deux utilisateurs.
+// status : PENDING (demande envoyée par requestedBy), ACCEPTED
+model Friendship {
+  id          String   @id @default(cuid())
+  userAId     String
+  userBId     String
+  status      String   @default("PENDING")
+  requestedBy String
+  createdAt   DateTime @default(now())
+
+  userA User @relation("UserA", fields: [userAId], references: [id])
+  userB User @relation("UserB", fields: [userBId], references: [id])
+
+  @@unique([userAId, userBId])
+}
+
+model Invite {
+  id              String   @id @default(cuid())
+  hostId          String
+  message         String
+  location        String
+  showRecipients  Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  host       User              @relation("HostInvites", fields: [hostId], references: [id])
+  recipients InviteRecipient[]
+  curses     Curse[]
+}
+
+model InviteRecipient {
+  id       String  @id @default(cuid())
+  inviteId String
+  userId   String
+  status   String  @default("SENT") // SENT, SEEN, JOINED, DECLINED
+
+  invite Invite @relation(fields: [inviteId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([inviteId, userId])
+}
