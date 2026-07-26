@@ -1,41 +1,26 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
-import { getInviteBlockReasons } from "@/lib/invitable";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationBell from "@/components/NotificationBell";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
-import InviteComposer from "@/components/InviteComposer";
 import MoodEffects from "@/components/MoodEffects";
+import DeleteAccountForm from "@/components/DeleteAccountForm";
 
-export default async function NewInvitePage() {
+export default async function SettingsPage() {
   const me = await getCurrentUser();
   if (!me) redirect("/login");
 
   const mood = await getUserMood(me.id, me.drinkStatus, me.drinkStatusDate);
   const intense = mood === "cursed" ? await isCurseFresh(me.id) : false;
 
-  const friendships = await prisma.friendship.findMany({
-    where: { status: "ACCEPTED", OR: [{ userAId: me.id }, { userBId: me.id }] },
-    include: { userA: true, userB: true },
-  });
-  const friendUsers = friendships.map((f) => (f.userAId === me.id ? f.userB : f.userA));
-  const blockReasons = await getInviteBlockReasons(friendUsers.map((u) => u.id));
-
-  const friends = friendUsers.map((u) => ({
-    id: u.id,
-    username: u.username,
-    blocked: blockReasons[u.id],
-  }));
-
   return (
     <div className={`screen ${intense ? "mood-intense" : ""}`} data-mood={mood}>
       <MoodEffects mood={mood} intense={intense} />
       <div className="topbar">
         <div className="brand">
-          <span className="brand-mark">📣</span> Lancer un appel
+          <span className="brand-mark">⚙️</span> Réglages
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
@@ -43,9 +28,24 @@ export default async function NewInvitePage() {
           <LogoutButton />
         </div>
       </div>
+
       <div className="container">
-        <InviteComposer friends={friends} />
+        <div className="section-title" style={{ marginTop: 0 }}>Ton compte</div>
+        <div className="card">
+          <div className="row" style={{ padding: "4px 0" }}>
+            <span style={{ color: "var(--foam-dim)" }}>Pseudo</span>
+            <strong>{me.username}</strong>
+          </div>
+          <div className="row" style={{ padding: "4px 0" }}>
+            <span style={{ color: "var(--foam-dim)" }}>E-mail</span>
+            <strong>{me.email}</strong>
+          </div>
+        </div>
+
+        <div className="section-title">Zone dangereuse</div>
+        <DeleteAccountForm />
       </div>
+
       <BottomNav />
     </div>
   );

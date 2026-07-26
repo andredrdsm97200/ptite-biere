@@ -8,6 +8,7 @@ import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
 import { gameDayRange } from "@/lib/gameDay";
 import LogoutButton from "@/components/LogoutButton";
+import NotificationBell from "@/components/NotificationBell";
 import BottomNav from "@/components/BottomNav";
 import DrinkStatusToggle from "@/components/DrinkStatusToggle";
 import MoodEffects from "@/components/MoodEffects";
@@ -49,7 +50,11 @@ export default async function DashboardPage() {
         <div className="brand">
           <span className="brand-mark">🍺</span> P'tite bière ?
         </div>
-        <LogoutButton />
+        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <NotificationBell />
+          <LogoutButton />
+        </div>
       </div>
 
       <div className="container">

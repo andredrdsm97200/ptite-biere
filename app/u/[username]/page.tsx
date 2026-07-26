@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle, bestHosts, hottestStreaks, mostUnavailable, mostCursed } from "@/lib/leaderboard";
 import LogoutButton from "@/components/LogoutButton";
+import NotificationBell from "@/components/NotificationBell";
+import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import BadgeChip from "@/components/BadgeChip";
@@ -48,7 +50,11 @@ export default async function ProfilePage({ params }: { params: { username: stri
         <div className="brand">
           <span className="brand-mark">👤</span> {profileUser.username}
         </div>
-        <LogoutButton />
+        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <NotificationBell />
+          <LogoutButton />
+        </div>
       </div>
 
       <div className="container">

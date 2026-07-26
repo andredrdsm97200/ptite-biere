@@ -7,6 +7,7 @@ import { getCircle, bestHosts, hottestStreaks, mostUnavailable, mostCursed, Rank
 import { getBadgeMap, globalScores } from "@/lib/badges";
 import { gameDayKey } from "@/lib/gameDay";
 import LogoutButton from "@/components/LogoutButton";
+import NotificationBell from "@/components/NotificationBell";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import AutoRefresh from "@/components/AutoRefresh";
@@ -92,7 +93,11 @@ export default async function LeaderboardPage() {
         <div className="brand">
           <span className="brand-mark">🏆</span> Classement
         </div>
-        <LogoutButton />
+        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <NotificationBell />
+          <LogoutButton />
+        </div>
       </div>
 
       <div className="container">

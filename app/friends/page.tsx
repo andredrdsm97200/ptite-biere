@@ -2,9 +2,12 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
+import { effectiveDrinkStatus } from "@/lib/drinkStatus";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
 import LogoutButton from "@/components/LogoutButton";
+import NotificationBell from "@/components/NotificationBell";
+import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import FriendsManager from "@/components/FriendsManager";
 import ContactsFinder from "@/components/ContactsFinder";
@@ -29,7 +32,15 @@ export default async function FriendsPage() {
     .filter((f) => f.status === "ACCEPTED")
     .map((f) => {
       const friend = f.userAId === me.id ? f.userB : f.userA;
-      return { id: friend.id, username: friend.username };
+      return {
+        id: friend.id,
+        username: friend.username,
+        status: effectiveDrinkStatus(friend.drinkStatus, friend.drinkStatusDate),
+      };
+    })
+    .sort((a, b) => {
+      const rank = (s: string | null) => (s === "AVAILABLE" ? 0 : s === null ? 1 : 2);
+      return rank(a.status) - rank(b.status);
     });
 
   const incoming = friendships
@@ -53,7 +64,11 @@ export default async function FriendsPage() {
         <div className="brand">
           <span className="brand-mark">👥</span> Amis
         </div>
-        <LogoutButton />
+        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <NotificationBell />
+          <LogoutButton />
+        </div>
       </div>
       <div className="container">
         {!me.phone && <PhoneSetup />}

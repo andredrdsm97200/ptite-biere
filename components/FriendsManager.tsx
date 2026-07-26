@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import BadgeInline from "./BadgeInline";
 
-type Friend = { id: string; username: string };
+type Friend = { id: string; username: string; status?: "AVAILABLE" | "UNAVAILABLE" | null };
 type Pending = { friendshipId: string; id: string; username: string };
 type BadgeIcon = { icon: string; title: string };
 
@@ -114,11 +114,15 @@ export default function FriendsManager({
       <div className="section-title">Tes amis ({accepted.length})</div>
       {accepted.length === 0 && <div className="empty">Pas encore d'amis ici. Ajoute-en un pour lancer ta première tournée.</div>}
       {accepted.map((f) => (
-        <div key={f.id} className="card">
-          <Link href={`/u/${f.username}`} style={{ textDecoration: "none", color: "inherit" }}>
-            {f.username}
-          </Link>
-          <BadgeInline badges={badgeMap[f.id]} />
+        <div key={f.id} className="card row">
+          <span>
+            <Link href={`/u/${f.username}`} style={{ textDecoration: "none", color: "inherit" }}>
+              {f.username}
+            </Link>
+            <BadgeInline badges={badgeMap[f.id]} />
+          </span>
+          {f.status === "AVAILABLE" && <span className="pill pill-cheers">🍻 chaud</span>}
+          {f.status === "UNAVAILABLE" && <span className="pill pill-decline">🙅 pas envie</span>}
         </div>
       ))}
     </div>

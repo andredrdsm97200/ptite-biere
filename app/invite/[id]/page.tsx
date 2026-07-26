@@ -6,6 +6,7 @@ import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
 import LogoutButton from "@/components/LogoutButton";
+import NotificationBell from "@/components/NotificationBell";
 import BottomNav from "@/components/BottomNav";
 import InviteActions from "@/components/InviteActions";
 import CurseButton from "@/components/CurseButton";
@@ -65,7 +66,11 @@ export default async function InvitePage({ params }: { params: { id: string } })
         <div className="brand">
           <span className="brand-mark">🍺</span> Invitation
         </div>
-        <LogoutButton />
+        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <NotificationBell />
+          <LogoutButton />
+        </div>
       </div>
 
       <div className="container">
