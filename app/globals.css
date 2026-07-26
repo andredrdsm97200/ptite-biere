@@ -32,6 +32,10 @@ body {
   color: var(--foam);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+  width: 100%;
 }
 
 body {
@@ -63,8 +67,11 @@ textarea {
 
 .screen {
   min-height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .container {
@@ -456,7 +463,8 @@ textarea {
   --amber: #9a9186;
   --amber-dim: #7d7568;
   --foam-dim: #a39a8d;
-  filter: saturate(0.55);
+  --cheers: #7a8a72;
+  --decline: #8f6a63;
 }
 
 .screen[data-mood="cursed"] {
