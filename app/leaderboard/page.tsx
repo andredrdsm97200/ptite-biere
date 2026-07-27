@@ -114,7 +114,7 @@ export default async function LeaderboardPage() {
 
         {toSanction.length > 0 && (
           <>
-            <div className="section-title">À sanctionner (7 derniers jours)</div>
+            <div className="section-title">🔮 Malédictions en attente (7 derniers jours)</div>
             {toSanction.map(({ invite, pending }) => (
               <div key={invite.id} className="card">
                 <p style={{ fontSize: 13, color: "var(--foam-dim)", marginBottom: 8 }}>
@@ -131,9 +131,10 @@ export default async function LeaderboardPage() {
           </>
         )}
 
-        <div className="section-title">🎲 Classement général</div>
+        <div className="section-title">✨ Karma</div>
         <p style={{ fontSize: 12, color: "var(--foam-dim)", marginTop: -6, marginBottom: 8 }}>
-          +3 par banco reçu (hôte), +2 par jour de série, -1 par "pas envie", -5 par malédiction.
+          +3 par invitation réussie (hôte), +2 par invitation rejointe, +1 par jour de
+          série "chaud", -3 par annulation tardive. Dire "pas envie" honnêtement ne coûte jamais rien.
         </p>
         {global.length === 0 ? (
           <p className="empty">Personne n'a encore de score. Active "Chaud" pour te lancer.</p>
@@ -149,7 +150,7 @@ export default async function LeaderboardPage() {
                   </Link>
                   <BadgeInline badges={badgeMap[r.userId]} />
                 </span>
-                <span>{r.score} pts</span>
+                <span>{r.score} Karma</span>
               </div>
             ))}
           </div>

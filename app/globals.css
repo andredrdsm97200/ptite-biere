@@ -1,23 +1,23 @@
 /* ---------------------------------------------------------------
-   Système de design — "terrasse d'été"
-   Cream (soleil) / Aperol (accent principal) / Soda (accent secondaire)
-   Ink (texte brun profond) / Cheers (vert olive "banco")
+   Système de design — "La Chope" (thème sombre)
+   Anthracite / Amber (bière) / Copper (accent secondaire)
+   Foam (texte clair) / Cheers (vert "banco")
    Display : Fredoka — Corps : Nunito — Note manuscrite : Caveat
    ----------------------------------------------------------------*/
 
 :root {
-  --ink: #fff6e9;
-  --ink-2: #ffeedc;
-  --ink-3: #ffe3c4;
-  --amber: #e8622c;
-  --amber-dim: #c94f1f;
+  --ink: #17181c;
+  --ink-2: #1f2126;
+  --ink-3: #262932;
+  --amber: #f2a93b;
+  --amber-dim: #d68b1f;
   --copper: #4a90a4;
-  --foam: #3b2a1a;
-  --foam-dim: #8a7462;
-  --cheers: #4f7a3d;
-  --decline: #a83f32;
+  --foam: #f2eee6;
+  --foam-dim: #9a9aa2;
+  --cheers: #6bbf7a;
+  --decline: #e2685c;
   --radius: 18px;
-  --shadow: 0 12px 30px rgba(59, 42, 26, 0.12);
+  --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
 * {
@@ -41,7 +41,7 @@ body {
 body {
   background-image: radial-gradient(
       ellipse 800px 400px at 20% -10%,
-      rgba(232, 98, 44, 0.08),
+      rgba(242, 169, 59, 0.08),
       transparent
     ),
     radial-gradient(ellipse 600px 300px at 100% 0%, rgba(74, 144, 164, 0.08), transparent);
@@ -87,7 +87,7 @@ textarea {
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
-  border-bottom: 1px solid rgba(59, 42, 26, 0.08);
+  border-bottom: 1px solid rgba(242, 238, 230, 0.08);
 }
 
 .brand {
@@ -143,13 +143,13 @@ textarea {
 .btn-primary {
   background: linear-gradient(180deg, var(--amber), var(--amber-dim));
   color: var(--ink);
-  box-shadow: 0 8px 20px rgba(232, 98, 44, 0.25);
+  box-shadow: 0 8px 20px rgba(242, 169, 59, 0.25);
 }
 
 .btn-secondary {
   background: var(--ink-3);
   color: var(--foam);
-  border: 1px solid rgba(59, 42, 26, 0.12);
+  border: 1px solid rgba(242, 238, 230, 0.12);
 }
 
 .btn-ghost {
@@ -162,7 +162,7 @@ textarea {
 .btn-danger {
   background: transparent;
   color: var(--decline);
-  border: 1px solid rgba(168, 63, 50, 0.4);
+  border: 1px solid rgba(226, 104, 92, 0.4);
 }
 
 .btn-sm {
@@ -187,7 +187,7 @@ textarea {
 .field textarea {
   width: 100%;
   background: var(--ink-2);
-  border: 1px solid rgba(59, 42, 26, 0.12);
+  border: 1px solid rgba(242, 238, 230, 0.12);
   border-radius: 12px;
   padding: 12px 14px;
   color: var(--foam);
@@ -208,16 +208,16 @@ textarea {
 /* Cartes */
 .card {
   background: var(--ink-2);
-  border: 1px solid rgba(59, 42, 26, 0.08);
+  border: 1px solid rgba(242, 238, 230, 0.08);
   border-radius: var(--radius);
   padding: 18px;
   margin-bottom: 14px;
 }
 
 .error-banner {
-  background: rgba(168, 63, 50, 0.12);
-  border: 1px solid rgba(168, 63, 50, 0.35);
-  color: #7a2c22;
+  background: rgba(226, 104, 92, 0.12);
+  border: 1px solid rgba(226, 104, 92, 0.35);
+  color: #ffb4a8;
   padding: 10px 14px;
   border-radius: 12px;
   font-size: 14px;
@@ -240,7 +240,7 @@ textarea {
   position: relative;
   box-shadow: var(--shadow);
   margin-bottom: 22px;
-  border: 3px dashed rgba(255, 246, 233, 0.18);
+  border: 3px dashed rgba(23, 24, 28, 0.15);
   animation: coasterPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
@@ -278,7 +278,7 @@ textarea {
 .coaster-from {
   text-align: center;
   font-size: 12px;
-  color: rgba(255, 246, 233, 0.6);
+  color: rgba(23, 24, 28, 0.55);
   margin-top: 10px;
   font-family: "Nunito", sans-serif;
 }
@@ -290,17 +290,17 @@ textarea {
   font-size: 12px;
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(59, 42, 26, 0.08);
+  background: rgba(242, 238, 230, 0.08);
   color: var(--foam-dim);
 }
 
 .pill-cheers {
-  background: rgba(79, 122, 61, 0.15);
+  background: rgba(107, 191, 122, 0.15);
   color: var(--cheers);
 }
 
 .pill-decline {
-  background: rgba(168, 63, 50, 0.15);
+  background: rgba(226, 104, 92, 0.15);
   color: var(--decline);
 }
 
@@ -317,7 +317,7 @@ textarea {
   gap: 12px;
   padding: 12px 14px;
   background: var(--ink-2);
-  border: 1px solid rgba(59, 42, 26, 0.1);
+  border: 1px solid rgba(242, 238, 230, 0.1);
   border-radius: 12px;
   margin-bottom: 8px;
   cursor: pointer;
@@ -325,7 +325,7 @@ textarea {
 
 .friend-checkbox.checked {
   border-color: var(--amber);
-  background: rgba(232, 98, 44, 0.08);
+  background: rgba(242, 169, 59, 0.08);
 }
 
 .toggle-row {
@@ -342,7 +342,7 @@ textarea {
   background: var(--ink-3);
   position: relative;
   cursor: pointer;
-  border: 1px solid rgba(59, 42, 26, 0.12);
+  border: 1px solid rgba(242, 238, 230, 0.12);
 }
 
 .switch.on {
@@ -402,7 +402,7 @@ textarea {
 
 .nav-shape {
   fill: #fffaf2;
-  stroke: rgba(59, 42, 26, 0.1);
+  stroke: rgba(242, 238, 230, 0.1);
   stroke-width: 1.5;
   transition: d 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -525,11 +525,11 @@ textarea {
 }
 
 .screen[data-mood="cold"] {
-  --amber: #9a9186;
-  --amber-dim: #7d7568;
-  --foam-dim: #a39a8d;
-  --cheers: #7a8a72;
-  --decline: #8f6a63;
+  --amber: #7d7d84;
+  --amber-dim: #63636a;
+  --foam-dim: #6f6f78;
+  --cheers: #6f8a76;
+  --decline: #8a6560;
 }
 
 .screen[data-mood="cursed"] {
@@ -758,6 +758,61 @@ textarea {
   color: #fffaf2;
 }
 
+.availability-card {
+  background: linear-gradient(180deg, var(--ink-2), var(--ink-3));
+  border-radius: 22px;
+  padding: 18px 16px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(242, 238, 230, 0.06);
+}
+
+.availability-title {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  margin: 0 0 14px;
+  text-align: center;
+}
+
+.availability-stats {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.availability-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.availability-stat strong {
+  font-family: "Fredoka", sans-serif;
+  font-size: 24px;
+}
+
+.availability-stat span {
+  font-size: 11px;
+  color: var(--foam-dim);
+}
+
+.availability-stat.hot strong {
+  color: var(--cheers);
+}
+
+.availability-stat.cold strong {
+  color: var(--decline);
+}
+
+.availability-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(242, 238, 230, 0.08);
+}
+
 .plans-block {
   margin-top: 4px;
   margin-bottom: 8px;
@@ -813,7 +868,7 @@ textarea {
 }
 
 .plan-card.pending {
-  background: rgba(232, 98, 44, 0.12);
+  background: rgba(242, 169, 59, 0.12);
   border-left-color: var(--amber);
 }
 .plan-card.pending .plan-tag-pill {
@@ -822,7 +877,7 @@ textarea {
 }
 
 .plan-card.joined {
-  background: rgba(79, 122, 61, 0.12);
+  background: rgba(107, 191, 122, 0.12);
   border-left-color: var(--cheers);
 }
 .plan-card.joined .plan-tag-pill {
@@ -831,7 +886,7 @@ textarea {
 }
 
 .plan-card.declined {
-  background: rgba(168, 63, 50, 0.1);
+  background: rgba(226, 104, 92, 0.1);
   border-left-color: var(--decline);
 }
 .plan-card.declined .plan-tag-pill {

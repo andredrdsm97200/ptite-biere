@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { effectiveDrinkStatus } from "@/lib/drinkStatus";
-import { getInviteBlockReasons } from "@/lib/invitable";
+import { getFriendStatuses, getCursedTodayIds } from "@/lib/invitable";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationBell from "@/components/NotificationBell";
 import Link from "next/link";
@@ -23,18 +23,18 @@ export default async function NewInvitePage() {
     include: { userA: true, userB: true },
   });
   const friendUsers = friendships.map((f) => (f.userAId === me.id ? f.userB : f.userA));
-  const blockReasons = await getInviteBlockReasons(friendUsers.map((u) => u.id));
+  const friendStatuses = await getFriendStatuses(friendUsers.map((u) => u.id));
+  const cursedIds = await getCursedTodayIds(friendUsers.map((u) => u.id));
 
   const friends = friendUsers
     .map((u) => {
-      const blocked = blockReasons[u.id];
       const status = effectiveDrinkStatus(u.drinkStatus, u.drinkStatusDate);
-      const state: "CURSED" | "UNAVAILABLE" | "AVAILABLE" | "NEUTRAL" =
-        blocked === "CURSED" ? "CURSED" : blocked === "UNAVAILABLE" ? "UNAVAILABLE" : status === "AVAILABLE" ? "AVAILABLE" : "NEUTRAL";
-      return { id: u.id, username: u.username, state };
+      const state: "UNAVAILABLE" | "AVAILABLE" | "NEUTRAL" =
+        friendStatuses[u.id] === "UNAVAILABLE" ? "UNAVAILABLE" : status === "AVAILABLE" ? "AVAILABLE" : "NEUTRAL";
+      return { id: u.id, username: u.username, state, cursed: cursedIds.has(u.id) };
     })
     .sort((a, b) => {
-      const rank = { AVAILABLE: 0, NEUTRAL: 1, UNAVAILABLE: 2, CURSED: 3 };
+      const rank = { AVAILABLE: 0, NEUTRAL: 1, UNAVAILABLE: 2 };
       return rank[a.state] - rank[b.state];
     });
 

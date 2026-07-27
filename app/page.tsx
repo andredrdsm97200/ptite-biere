@@ -14,6 +14,7 @@ import DrinkStatusToggle from "@/components/DrinkStatusToggle";
 import MoodEffects from "@/components/MoodEffects";
 import AutoRefresh from "@/components/AutoRefresh";
 import PlansSection from "@/components/PlansSection";
+import AvailabilitySummary from "@/components/AvailabilitySummary";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -23,6 +24,19 @@ export default async function DashboardPage() {
   const intense = mood === "cursed" ? await isCurseFresh(user.id) : false;
   const circle = await getCircle(user.id);
   const badgeMap = await getBadgeMap(circle);
+
+  const friendships = await prisma.friendship.findMany({
+    where: { status: "ACCEPTED", OR: [{ userAId: user.id }, { userBId: user.id }] },
+    include: { userA: true, userB: true },
+  });
+  const friendsWithStatus = friendships.map((f) => {
+    const friend = f.userAId === user.id ? f.userB : f.userA;
+    return {
+      id: friend.id,
+      username: friend.username,
+      status: effectiveDrinkStatus(friend.drinkStatus, friend.drinkStatusDate),
+    };
+  });
 
   // La soirée du jour disparaît de l'accueil à 5h du matin (mais reste en
   // base pour les classements et les malédictions du lendemain).
@@ -61,6 +75,8 @@ export default async function DashboardPage() {
         <p style={{ color: "var(--foam-dim)", marginBottom: 14 }}>
           Salut {user.username} 👋
         </p>
+
+        <AvailabilitySummary friends={friendsWithStatus} />
 
         <DrinkStatusToggle initialStatus={effectiveDrinkStatus(user.drinkStatus, user.drinkStatusDate)} />
 

@@ -2,34 +2,29 @@ import { prisma } from "./db";
 import { gameDayRange } from "./gameDay";
 import { effectiveDrinkStatus } from "./drinkStatus";
 
-export type InviteBlockReason = "UNAVAILABLE" | "CURSED" | null;
+export type FriendStatus = "UNAVAILABLE" | null;
 
-// Un maudit du jour est en "quarantaine" : personne ne peut l'inviter tant
-// que le poison n'est pas retombé (5h du matin). C'est la vraie conséquence
-// de la malédiction, pas juste un habillage visuel.
-export async function getInviteBlockReasons(
-  userIds: string[]
-): Promise<Record<string, InviteBlockReason>> {
+// Purement informatif désormais : "pas envie" n'empêche plus d'inviter
+// quelqu'un, c'est juste un indice pour aider à choisir qui convier.
+export async function getFriendStatuses(userIds: string[]): Promise<Record<string, FriendStatus>> {
   if (userIds.length === 0) return {};
-
   const users = await prisma.user.findMany({ where: { id: { in: userIds } } });
+  const statuses: Record<string, FriendStatus> = {};
+  for (const u of users) {
+    statuses[u.id] = effectiveDrinkStatus(u.drinkStatus, u.drinkStatusDate) === "UNAVAILABLE" ? "UNAVAILABLE" : null;
+  }
+  return statuses;
+}
+
+// Est-ce que cette personne est actuellement maudite (aujourd'hui) ?
+// Purement informatif/cosmétique — n'empêche jamais d'être invité.
+export async function getCursedTodayIds(userIds: string[]): Promise<Set<string>> {
+  if (userIds.length === 0) return new Set();
   const { start, end } = gameDayRange();
   const curses = await prisma.curse.findMany({
     where: { cursedUserId: { in: userIds }, createdAt: { gte: start, lt: end } },
   });
-  const cursedTodayIds = new Set(curses.map((c) => c.cursedUserId));
-
-  const reasons: Record<string, InviteBlockReason> = {};
-  for (const u of users) {
-    if (cursedTodayIds.has(u.id)) {
-      reasons[u.id] = "CURSED";
-    } else if (effectiveDrinkStatus(u.drinkStatus, u.drinkStatusDate) === "UNAVAILABLE") {
-      reasons[u.id] = "UNAVAILABLE";
-    } else {
-      reasons[u.id] = null;
-    }
-  }
-  return reasons;
+  return new Set(curses.map((c) => c.cursedUserId));
 }
 
 // Un maudit non "remboursé" (tournée double pas encore payée) doit ce

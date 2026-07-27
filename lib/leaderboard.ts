@@ -61,6 +61,34 @@ export async function mostCursed(circle: string[]): Promise<RankRow[]> {
     .sort((a, b) => b.value - a.value);
 }
 
+// 🙋 Participation réelle : nombre de fois où la personne a rejoint une invitation.
+export async function participationCounts(circle: string[]): Promise<RankRow[]> {
+  const rows = await prisma.inviteRecipient.findMany({
+    where: { userId: { in: circle }, status: "JOINED" },
+  });
+  const counts = new Map<string, number>();
+  for (const r of rows) counts.set(r.userId, (counts.get(r.userId) || 0) + 1);
+  const names = await usernamesById(circle);
+  return circle
+    .map((id) => ({ userId: id, username: names[id], value: counts.get(id) || 0 }))
+    .filter((r) => r.value > 0)
+    .sort((a, b) => b.value - a.value);
+}
+
+// 💨 Annulations tardives : dit "j'arrive" puis se rétracte.
+export async function lateCancellationCounts(circle: string[]): Promise<RankRow[]> {
+  const rows = await prisma.inviteRecipient.findMany({
+    where: { userId: { in: circle }, status: "CANCELLED" },
+  });
+  const counts = new Map<string, number>();
+  for (const r of rows) counts.set(r.userId, (counts.get(r.userId) || 0) + 1);
+  const names = await usernamesById(circle);
+  return circle
+    .map((id) => ({ userId: id, username: names[id], value: counts.get(id) || 0 }))
+    .filter((r) => r.value > 0)
+    .sort((a, b) => b.value - a.value);
+}
+
 // 🔥 Le plus chaud sans interruption : jours consécutifs où la personne
 // était "chaude" ET a reçu une invitation ce jour-là ET y est allée (JOINED).
 async function computeStreak(userId: string): Promise<number> {

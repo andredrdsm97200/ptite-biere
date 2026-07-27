@@ -143,7 +143,7 @@ function RegisterForm() {
           />
         </div>
         <div className="field">
-          <label>Téléphone (facultatif — pour que tes potes te retrouvent via leurs contacts)</label>
+          <label>Téléphone (facultatif — pour que tes amis te retrouvent via leurs contacts)</label>
           <input
             type="tel"
             value={phone}

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { sendPush } from "@/lib/push";
-import { getInviteBlockReasons } from "@/lib/invitable";
 
 export async function GET() {
   const me = await getCurrentUser();
@@ -67,18 +66,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // On exclut tout ami en quarantaine (maudit aujourd'hui) ou ayant déclaré
-  // ne pas être disponible — même si la requête essaie de le forcer.
-  const blockReasons = await getInviteBlockReasons(candidateIds);
-  const validRecipientIds = candidateIds.filter((id: string) => !blockReasons[id]);
-
-  if (validRecipientIds.length === 0) {
-    return NextResponse.json(
-      { error: "Ces amis ne sont pas disponibles aujourd'hui (pas chauds, ou maudits en quarantaine)." },
-      { status: 400 }
-    );
-  }
-
   const invite = await prisma.invite.create({
     data: {
       hostId: me.id,
@@ -86,7 +73,7 @@ export async function POST(req: NextRequest) {
       location: location.trim(),
       showRecipients: !!showRecipients,
       recipients: {
-        create: validRecipientIds.map((userId: string) => ({ userId })),
+        create: candidateIds.map((userId: string) => ({ userId })),
       },
     },
     include: { recipients: { include: { user: true } } },
@@ -94,7 +81,7 @@ export async function POST(req: NextRequest) {
 
   // Envoi des notifications push à chaque destinataire qui y est abonné.
   const recipientsUsers = await prisma.user.findMany({
-    where: { id: { in: validRecipientIds } },
+    where: { id: { in: candidateIds } },
   });
 
   await Promise.all(

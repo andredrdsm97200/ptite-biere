@@ -29,7 +29,7 @@ export default function PhoneSetup() {
 
   return (
     <div className="card">
-      <strong>Sois trouvable par tes potes</strong>
+      <strong>Sois trouvable par tes amis</strong>
       <p style={{ fontSize: 13, color: "var(--foam-dim)", margin: "6px 0 12px" }}>
         Ajoute ton numéro pour que ceux qui t'ont dans leurs contacts puissent te retrouver.
       </p>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Friend = { id: string; username: string; state: "CURSED" | "UNAVAILABLE" | "AVAILABLE" | "NEUTRAL" };
+type Friend = { id: string; username: string; state: "UNAVAILABLE" | "AVAILABLE" | "NEUTRAL"; cursed?: boolean };
 
 const QUICK_MESSAGES = [
   "Je finis le taff dans 10 min, ça vous dit ?",
@@ -17,7 +17,9 @@ export default function InviteComposer({ friends }: { friends: Friend[] }) {
   const [message, setMessage] = useState("");
   const [location, setLocation] = useState("");
   const [showRecipients, setShowRecipients] = useState(true);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(() =>
+    friends.filter((f) => f.state === "AVAILABLE").map((f) => f.id)
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -95,19 +97,20 @@ export default function InviteComposer({ friends }: { friends: Friend[] }) {
       </div>
 
       <div className="section-title">À qui ?</div>
+      <p style={{ fontSize: 12, color: "var(--foam-dim)", marginTop: -4, marginBottom: 10 }}>
+        Les potes "chauds" sont déjà cochés. Décoche ou recoche comme tu veux.
+      </p>
       {friends.map((f) => {
         const checked = selected.includes(f.id);
-        const blocked = f.state === "CURSED" || f.state === "UNAVAILABLE";
         return (
           <div
             key={f.id}
             className={`friend-checkbox ${checked ? "checked" : ""}`}
-            style={blocked ? { opacity: 0.45, cursor: "not-allowed" } : undefined}
-            onClick={() => !blocked && toggleFriend(f.id)}
+            onClick={() => toggleFriend(f.id)}
           >
-            <input type="checkbox" checked={checked} disabled={blocked} readOnly />
+            <input type="checkbox" checked={checked} readOnly />
             <span style={{ flex: 1 }}>{f.username}</span>
-            {f.state === "CURSED" && <span className="pill pill-cursed">🔮 En quarantaine</span>}
+            {f.cursed && <span className="pill pill-cursed">🔮 Maudit</span>}
             {f.state === "UNAVAILABLE" && <span className="pill pill-decline">🙅 Pas dispo</span>}
             {f.state === "AVAILABLE" && <span className="pill pill-cheers">🍻 Chaud</span>}
             {f.state === "NEUTRAL" && <span className="pill">Non prononcé</span>}

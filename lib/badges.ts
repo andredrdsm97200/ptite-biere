@@ -1,4 +1,4 @@
-import { bestHosts, hottestStreaks, mostUnavailable, mostCursed, RankRow } from "./leaderboard";
+import { bestHosts, hottestStreaks, mostUnavailable, mostCursed, participationCounts, lateCancellationCounts, RankRow } from "./leaderboard";
 
 export type BadgeIcon = { icon: string; title: string };
 
@@ -26,15 +26,17 @@ export async function getBadgeMap(circle: string[]): Promise<Record<string, Badg
   return map;
 }
 
-// Score combiné, façon jeu de société : une seule note qui résume tout.
+// Karma : une seule note qui résume la fiabilité et l'engagement dans la
+// cercle d'amis. Dire honnêtement "pas envie" n'est jamais puni — seul le fait de
+// se décommander après avoir dit "j'arrive" fait baisser le Karma.
 export type GlobalScoreRow = { userId: string; username: string; score: number };
 
 export async function globalScores(circle: string[]): Promise<GlobalScoreRow[]> {
-  const [hosts, streaks, cold, cursed] = await Promise.all([
+  const [hosts, streaks, participation, lateCancels] = await Promise.all([
     bestHosts(circle),
     hottestStreaks(circle),
-    mostUnavailable(circle),
-    mostCursed(circle),
+    participationCounts(circle),
+    lateCancellationCounts(circle),
   ]);
 
   const scores = new Map<string, { username: string; score: number }>();
@@ -46,10 +48,10 @@ export async function globalScores(circle: string[]): Promise<GlobalScoreRow[]> 
     }
   };
 
-  bump(hosts, 3); // +3 par "banco" reçu en tant qu'hôte
-  bump(streaks, 2); // +2 par jour de série en cours
-  bump(cold, -1); // -1 par "pas envie" déclaré
-  bump(cursed, -5); // -5 par malédiction reçue
+  bump(hosts, 3); // +3 par invitation réussie en tant qu'hôte (banco reçu)
+  bump(participation, 2); // +2 par invitation rejointe en tant qu'invité
+  bump(streaks, 1); // +1 par jour de série "chaud" en cours
+  bump(lateCancels, -3); // -3 par annulation tardive (après avoir dit "j'arrive")
 
   return Array.from(scores.entries())
     .map(([userId, v]) => ({ userId, username: v.username, score: v.score }))

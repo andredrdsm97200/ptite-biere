@@ -153,7 +153,7 @@ export default async function InvitePage({ params }: { params: { id: string } })
             {isHost && (
               <p style={{ fontSize: 12, color: "var(--foam-dim)", marginTop: -6 }}>
                 Un pote annoncé mais jamais venu ? Tu peux le maudire — son thème
-                passera au poison, et plus personne ne pourra l'inviter jusqu'à demain 5h.
+                passera au poison pour rire, sans aucune vraie conséquence.
               </p>
             )}
           </>
