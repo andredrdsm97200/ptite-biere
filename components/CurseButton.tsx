@@ -31,8 +31,30 @@ export default function CurseButton({
     }
   }
 
+  async function handleLift() {
+    if (!confirm("Lever cette malédiction ? Son thème redevient normal tout de suite.")) return;
+    setLoading(true);
+    const res = await fetch(`/api/invites/${inviteId}/curse`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ recipientUserId }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      setDone(false);
+      router.refresh();
+    }
+  }
+
   if (done) {
-    return <span className="pill pill-cursed">🔮 Maudit</span>;
+    return (
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <span className="pill pill-cursed">🔮 Maudit</span>
+        <button className="btn-curse" disabled={loading} onClick={handleLift}>
+          {loading ? "..." : "Lever"}
+        </button>
+      </div>
+    );
   }
 
   return (

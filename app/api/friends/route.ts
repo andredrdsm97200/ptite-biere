@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import { sendPush } from "@/lib/push";
 
 export async function GET() {
   const me = await getCurrentUser();
@@ -66,6 +67,14 @@ export async function POST(req: NextRequest) {
   await prisma.friendship.create({
     data: { userAId, userBId, requestedBy: me.id, status: "PENDING" },
   });
+
+  if (target.pushSubscription) {
+    await sendPush(target.pushSubscription, {
+      title: "Nouvelle demande d'ami 👋",
+      body: `${me.username} veut te rejoindre sur P'tite bière !`,
+      url: "/friends",
+    });
+  }
 
   return NextResponse.json({ ok: true });
 }

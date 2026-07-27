@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import { sendPush } from "@/lib/push";
 
 export async function POST(req: NextRequest) {
   const me = await getCurrentUser();
@@ -24,6 +25,15 @@ export async function POST(req: NextRequest) {
       where: { id: friendshipId },
       data: { status: "ACCEPTED" },
     });
+
+    const requester = await prisma.user.findUnique({ where: { id: friendship.requestedBy } });
+    if (requester?.pushSubscription) {
+      await sendPush(requester.pushSubscription, {
+        title: "Demande acceptée 🎉",
+        body: `${me.username} a accepté ta demande d'ami !`,
+        url: "/friends",
+      });
+    }
   } else {
     await prisma.friendship.delete({ where: { id: friendshipId } });
   }
