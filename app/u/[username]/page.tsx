@@ -3,12 +3,14 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle, bestHosts, hottestStreaks, mostUnavailable, mostCursed } from "@/lib/leaderboard";
+import { getChope } from "@/lib/chope";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationBell from "@/components/NotificationBell";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import BadgeChip from "@/components/BadgeChip";
+import ChopeCard from "@/components/ChopeCard";
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
   const me = await getCurrentUser();
@@ -26,11 +28,12 @@ export default async function ProfilePage({ params }: { params: { username: stri
   const mood = await getUserMood(me.id, me.drinkStatus, me.drinkStatusDate);
   const intense = mood === "cursed" ? await isCurseFresh(me.id) : false;
 
-  const [hosts, streaks, cold, cursed] = await Promise.all([
+  const [hosts, streaks, cold, cursed, chope] = await Promise.all([
     bestHosts(circle),
     hottestStreaks(circle),
     mostUnavailable(circle),
     mostCursed(circle),
+    getChope(profileUser.id),
   ]);
 
   const badges = [
@@ -58,6 +61,8 @@ export default async function ProfilePage({ params }: { params: { username: stri
       </div>
 
       <div className="container">
+        <ChopeCard chope={chope} seed={profileUser.id} />
+
         <div className="section-title" style={{ marginTop: 0 }}>Trophées</div>
         {badges.length === 0 ? (
           <p className="empty">Aucun badge pour l'instant.</p>

@@ -5,6 +5,7 @@ import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { effectiveDrinkStatus } from "@/lib/drinkStatus";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
+import { getChopeMap } from "@/lib/chope";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationBell from "@/components/NotificationBell";
 import Link from "next/link";
@@ -22,6 +23,7 @@ export default async function FriendsPage() {
   const intense = mood === "cursed" ? await isCurseFresh(me.id) : false;
   const circle = await getCircle(me.id);
   const badgeMap = await getBadgeMap(circle);
+  const chopeMap = await getChopeMap(circle);
 
   const friendships = await prisma.friendship.findMany({
     where: { OR: [{ userAId: me.id }, { userBId: me.id }] },
@@ -73,7 +75,7 @@ export default async function FriendsPage() {
       <div className="container">
         {!me.phone && <PhoneSetup />}
         <ContactsFinder username={me.username} />
-        <FriendsManager accepted={accepted} incoming={incoming} outgoing={outgoing} badgeMap={badgeMap} />
+        <FriendsManager accepted={accepted} incoming={incoming} outgoing={outgoing} badgeMap={badgeMap} chopeMap={chopeMap} />
       </div>
       <BottomNav />
     </div>

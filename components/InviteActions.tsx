@@ -68,7 +68,7 @@ export default function InviteActions({
             onChange={(e) => setNote(e.target.value)}
             placeholder="Désolé les gars, urgence chat..."
             style={{
-              width: "100%", background: "var(--ink)", border: "1px solid rgba(59,42,26,0.15)",
+              width: "100%", background: "var(--ink)", border: "1px solid rgba(242,238,230,0.12)",
               borderRadius: 12, padding: "10px 12px", color: "var(--foam)", fontSize: 14, minHeight: 70, marginBottom: 10,
             }}
           />

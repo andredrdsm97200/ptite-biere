@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import BadgeInline from "./BadgeInline";
+import ChopeInline from "./ChopeInline";
+import type { ChopeInfo } from "@/lib/chope";
 
 type Friend = { id: string; username: string; status?: "AVAILABLE" | "UNAVAILABLE" | null };
 type Pending = { friendshipId: string; id: string; username: string };
@@ -14,11 +16,13 @@ export default function FriendsManager({
   incoming,
   outgoing,
   badgeMap = {},
+  chopeMap = {},
 }: {
   accepted: Friend[];
   incoming: Pending[];
   outgoing: Pending[];
   badgeMap?: Record<string, BadgeIcon[]>;
+  chopeMap?: Record<string, ChopeInfo>;
 }) {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -67,7 +71,7 @@ export default function FriendsManager({
             style={{
               flex: 1,
               background: "var(--ink)",
-              border: "1px solid rgba(59,42,26,0.15)",
+              border: "1px solid rgba(242,238,230,0.12)",
               borderRadius: 12,
               padding: "10px 12px",
               color: "var(--foam)",
@@ -116,6 +120,7 @@ export default function FriendsManager({
       {accepted.map((f) => (
         <div key={f.id} className="card row">
           <span>
+            <ChopeInline chope={chopeMap[f.id]} seed={f.id} />
             <Link href={`/u/${f.username}`} style={{ textDecoration: "none", color: "inherit" }}>
               {f.username}
             </Link>

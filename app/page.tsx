@@ -6,6 +6,7 @@ import { effectiveDrinkStatus } from "@/lib/drinkStatus";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
+import { getChope } from "@/lib/chope";
 import { gameDayRange } from "@/lib/gameDay";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationBell from "@/components/NotificationBell";
@@ -15,6 +16,7 @@ import MoodEffects from "@/components/MoodEffects";
 import AutoRefresh from "@/components/AutoRefresh";
 import PlansSection from "@/components/PlansSection";
 import AvailabilitySummary from "@/components/AvailabilitySummary";
+import ChopeArt from "@/components/ChopeArt";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -24,6 +26,7 @@ export default async function DashboardPage() {
   const intense = mood === "cursed" ? await isCurseFresh(user.id) : false;
   const circle = await getCircle(user.id);
   const badgeMap = await getBadgeMap(circle);
+  const myChope = await getChope(user.id);
 
   const friendships = await prisma.friendship.findMany({
     where: { status: "ACCEPTED", OR: [{ userAId: user.id }, { userBId: user.id }] },
@@ -72,9 +75,12 @@ export default async function DashboardPage() {
       </div>
 
       <div className="container">
-        <p style={{ color: "var(--foam-dim)", marginBottom: 14 }}>
-          Salut {user.username} 👋
-        </p>
+        <Link href={`/u/${user.username}`} style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+          <ChopeArt tier={myChope.tierIndex} size={26} seed="greeting" />
+          <span style={{ color: "var(--foam-dim)" }}>
+            Salut {user.username} 👋 <span style={{ textDecoration: "underline" }}>({myChope.name})</span>
+          </span>
+        </Link>
 
         <AvailabilitySummary friends={friendsWithStatus} />
 

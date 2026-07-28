@@ -44,7 +44,7 @@ export default function PhoneSetup() {
           style={{
             flex: 1,
             background: "var(--ink)",
-            border: "1px solid rgba(59,42,26,0.15)",
+            border: "1px solid rgba(242,238,230,0.12)",
             borderRadius: 12,
             padding: "10px 12px",
             color: "var(--foam)",
