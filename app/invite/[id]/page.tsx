@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
+import { getChopeMap } from "@/lib/chope";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationBell from "@/components/NotificationBell";
 import BottomNav from "@/components/BottomNav";
@@ -14,6 +15,8 @@ import RedeemButton from "@/components/RedeemButton";
 import MoodEffects from "@/components/MoodEffects";
 import BadgeInline from "@/components/BadgeInline";
 import CancelInviteButton from "@/components/CancelInviteButton";
+import EventGauge from "@/components/EventGauge";
+import ParticipantAvatars from "@/components/ParticipantAvatars";
 
 const statusLabel: Record<string, { text: string; className: string }> = {
   SENT: { text: "Pas encore vu", className: "pill" },
@@ -51,6 +54,8 @@ export default async function InvitePage({ params }: { params: { id: string } })
 
   const circle = await getCircle(me.id);
   const badgeMap = await getBadgeMap(circle);
+  const chopeMap = await getChopeMap([...circle, invite.hostId, ...invite.recipients.map((r) => r.userId)]);
+  const joinedCount = invite.recipients.filter((r) => r.status === "JOINED").length;
 
   // Dettes de "tournée double" en cours, pour chaque invité présent.
   const joinedIds = invite.recipients.filter((r) => r.status === "JOINED").map((r) => r.userId);
@@ -87,6 +92,16 @@ export default async function InvitePage({ params }: { params: { id: string } })
             <BadgeInline badges={badgeMap[invite.hostId]} />
           </p>
         </div>
+
+        {(invite.showRecipients || isHost) && (
+          <div className="card event-gauge-card">
+            <EventGauge joined={joinedCount} total={invite.recipients.length} />
+            <ParticipantAvatars
+              participants={invite.recipients.map((r) => ({ id: r.userId, username: r.user.username, status: r.status }))}
+              chopeMap={chopeMap}
+            />
+          </div>
+        )}
 
         <div className="card">
           <div className="section-title" style={{ margin: 0, marginBottom: 8 }}>

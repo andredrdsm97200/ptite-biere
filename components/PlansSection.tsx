@@ -59,15 +59,20 @@ export default function PlansSection({
 
       {sent.map((invite) => {
         const joined = invite.recipients.filter((r) => r.status === "JOINED").length;
+        const total = invite.recipients.length;
+        const pct = total > 0 ? Math.round((joined / total) * 100) : 0;
         return (
           <Link key={invite.id} href={`/invite/${invite.id}`} className="plan-card hosting">
             <div className="plan-card-top">
               <strong>📣 {invite.location}</strong>
-              <span className="plan-tag-pill">{joined}/{invite.recipients.length} ok</span>
+              <span className="plan-tag-pill">{joined}/{total} ok</span>
             </div>
             <p className="plan-card-msg">
               {invite.message.length > 80 ? invite.message.slice(0, 80) + "…" : invite.message}
             </p>
+            <div className="plan-mini-gauge-track">
+              <div className="plan-mini-gauge-fill" style={{ width: `${pct}%` }} />
+            </div>
           </Link>
         );
       })}
