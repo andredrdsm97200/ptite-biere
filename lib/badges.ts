@@ -1,6 +1,7 @@
 import { bestHosts, hottestStreaks, mostUnavailable, mostCursed, participationCounts, lateCancellationCounts, RankRow } from "./leaderboard";
 
-export type BadgeIcon = { icon: string; title: string };
+export type BadgeIconKey = "host" | "streak" | "cold" | "cursed";
+export type BadgeIcon = { icon: BadgeIconKey; title: string };
 
 // Icônes affichées à côté d'un pseudo, partout dans l'appli, pour qui tient
 // actuellement le badge (1er du classement de la catégorie).
@@ -13,15 +14,15 @@ export async function getBadgeMap(circle: string[]): Promise<Record<string, Badg
   ]);
 
   const map: Record<string, BadgeIcon[]> = {};
-  const add = (rows: RankRow[], icon: string, title: string) => {
+  const add = (rows: RankRow[], icon: BadgeIconKey, title: string) => {
     if (rows[0]) {
       (map[rows[0].userId] ||= []).push({ icon, title });
     }
   };
-  add(hosts, "🏅", "Meilleur hôte");
-  add(streaks, "🔥", "Le plus chaud sans interruption");
-  add(cold, "🥶", "Le moins chaud");
-  add(cursed, "🔮", "Le plus maudit");
+  add(hosts, "host", "Meilleur hôte");
+  add(streaks, "streak", "Le plus chaud sans interruption");
+  add(cold, "cold", "Le moins chaud");
+  add(cursed, "cursed", "Le plus maudit");
 
   return map;
 }

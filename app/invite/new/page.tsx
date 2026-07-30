@@ -10,6 +10,7 @@ import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import InviteComposer from "@/components/InviteComposer";
 import MoodEffects from "@/components/MoodEffects";
+import { IconSettings } from "@/components/icons";
 
 export default async function NewInvitePage() {
   const me = await getCurrentUser();
@@ -52,7 +53,7 @@ export default async function NewInvitePage() {
           <span className="brand-mark">📣</span> Lancer un appel
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
           <NotificationBell />
           <LogoutButton />
         </div>

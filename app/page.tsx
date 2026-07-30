@@ -18,6 +18,7 @@ import PlansSection from "@/components/PlansSection";
 import AvailabilitySummary from "@/components/AvailabilitySummary";
 import DeclicCard from "@/components/DeclicCard";
 import ChopeArt from "@/components/ChopeArt";
+import { IconSettings } from "@/components/icons";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -69,7 +70,7 @@ export default async function DashboardPage() {
           <span className="brand-mark">🍺</span> P'tite bière ?
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
           <NotificationBell />
           <LogoutButton />
         </div>

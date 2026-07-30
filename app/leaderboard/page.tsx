@@ -14,6 +14,7 @@ import AutoRefresh from "@/components/AutoRefresh";
 import BadgeChip from "@/components/BadgeChip";
 import BadgeInline from "@/components/BadgeInline";
 import CurseButton from "@/components/CurseButton";
+import { IconSettings, IconFlame, IconCrown } from "@/components/icons";
 
 function RankingList({
   rows,
@@ -25,7 +26,7 @@ function RankingList({
   rows: RankRow[];
   meId: string;
   unit: string;
-  badgeMap: Record<string, { icon: string; title: string }[]>;
+  badgeMap: Record<string, { icon: import("@/lib/badges").BadgeIconKey; title: string }[]>;
   flame?: boolean;
 }) {
   if (rows.length === 0) return <p className="empty">Personne dans ce classement pour l'instant.</p>;
@@ -41,7 +42,11 @@ function RankingList({
             <BadgeInline badges={badgeMap[r.userId]} />
           </span>
           <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            {flame && <span style={{ fontSize: 12 + Math.min(r.value, 10) * 2 }}>🔥</span>}
+            {flame && (
+              <span style={{ color: "var(--decline)", display: "inline-flex" }}>
+                <IconFlame size={12 + Math.min(r.value, 10) * 2} />
+              </span>
+            )}
             {r.value} {unit}
           </span>
         </div>
@@ -94,7 +99,7 @@ export default async function LeaderboardPage() {
           <span className="brand-mark">🏆</span> Classement
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
           <NotificationBell />
           <LogoutButton />
         </div>
@@ -144,7 +149,7 @@ export default async function LeaderboardPage() {
               <div key={r.userId} className={`leaderboard-row ${r.userId === me.id ? "me" : ""}`}>
                 <span style={{ display: "flex", gap: 10, alignItems: "center" }}>
                   <span className="rank">#{i + 1}</span>
-                  {i === 0 && <span>👑</span>}
+                  {i === 0 && <span style={{ color: "var(--amber)", display: "inline-flex" }}><IconCrown size={16} /></span>}
                   <Link href={`/u/${r.username}`} style={{ textDecoration: "none", color: "inherit" }}>
                     {r.username}
                   </Link>

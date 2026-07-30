@@ -151,29 +151,33 @@ export default function FriendsManager({
       {accepted.length > 0 && filteredAccepted.length === 0 && (
         <div className="empty">Aucun ami ne correspond à "{search}".</div>
       )}
-      {filteredAccepted.map((f) => (
-        <div key={f.id} className="card row">
-          <span>
-            <ChopeInline chope={chopeMap[f.id]} seed={f.id} />
-            <Link href={`/u/${f.username}`} style={{ textDecoration: "none", color: "inherit" }}>
-              {f.username}
-            </Link>
-            <BadgeInline badges={badgeMap[f.id]} />
-          </span>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            {f.status === "AVAILABLE" && <span className="pill pill-cheers">🍻 chaud</span>}
-            {f.status === "UNAVAILABLE" && <span className="pill pill-decline">🙅 pas envie</span>}
-            <button
-              onClick={() => removeFriend(f.id, f.username)}
-              className="link-muted"
-              style={{ fontSize: 16, textDecoration: "none" }}
-              title="Retirer de mes amis"
-            >
-              •••
-            </button>
-          </div>
+      {filteredAccepted.length > 0 && (
+        <div className="card" style={{ padding: "2px 14px" }}>
+          {filteredAccepted.map((f) => (
+            <div key={f.id} className="list-row">
+              <span>
+                <ChopeInline chope={chopeMap[f.id]} seed={f.id} />
+                <Link href={`/u/${f.username}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  {f.username}
+                </Link>
+                <BadgeInline badges={badgeMap[f.id]} />
+              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {f.status === "AVAILABLE" && <span className="pill pill-cheers">🍻 chaud</span>}
+                {f.status === "UNAVAILABLE" && <span className="pill pill-decline">🙅 pas envie</span>}
+                <button
+                  onClick={() => removeFriend(f.id, f.username)}
+                  className="link-muted"
+                  style={{ fontSize: 16, textDecoration: "none" }}
+                  title="Retirer de mes amis"
+                >
+                  •••
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

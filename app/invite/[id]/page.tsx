@@ -17,6 +17,7 @@ import BadgeInline from "@/components/BadgeInline";
 import CancelInviteButton from "@/components/CancelInviteButton";
 import EventGauge from "@/components/EventGauge";
 import ParticipantAvatars from "@/components/ParticipantAvatars";
+import { IconSettings, IconPin } from "@/components/icons";
 
 const statusLabel: Record<string, { text: string; className: string }> = {
   SENT: { text: "Pas encore vu", className: "pill" },
@@ -72,7 +73,7 @@ export default async function InvitePage({ params }: { params: { id: string } })
           <span className="brand-mark">🍺</span> Invitation
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
           <NotificationBell />
           <LogoutButton />
         </div>
@@ -105,7 +106,10 @@ export default async function InvitePage({ params }: { params: { id: string } })
 
         <div className="card">
           <div className="section-title" style={{ margin: 0, marginBottom: 8 }}>
-            📍 Lieu
+            <span style={{ color: "var(--copper)", display: "inline-flex", verticalAlign: "middle", marginRight: 6 }}>
+              <IconPin size={13} />
+            </span>
+            Lieu
           </div>
           <p style={{ marginBottom: 10 }}>{invite.location}</p>
           <a href={mapsUrl} target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ textDecoration: "none" }}>

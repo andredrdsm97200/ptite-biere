@@ -7,6 +7,7 @@ import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import DeleteAccountForm from "@/components/DeleteAccountForm";
+import { IconSettings } from "@/components/icons";
 
 export default async function SettingsPage() {
   const me = await getCurrentUser();
@@ -23,7 +24,7 @@ export default async function SettingsPage() {
           <span className="brand-mark">⚙️</span> Réglages
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
           <NotificationBell />
           <LogoutButton />
         </div>

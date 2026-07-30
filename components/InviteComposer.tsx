@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconPotion } from "./icons";
 
 type Friend = { id: string; username: string; state: "UNAVAILABLE" | "AVAILABLE" | "NEUTRAL"; cursed?: boolean };
 type Team = { id: string; name: string; icon: string; memberIds: string[] };
@@ -136,7 +137,7 @@ export default function InviteComposer({ friends, teams = [] }: { friends: Frien
           >
             <input type="checkbox" checked={checked} readOnly />
             <span style={{ flex: 1 }}>{f.username}</span>
-            {f.cursed && <span className="pill pill-cursed">🔮 Maudit</span>}
+            {f.cursed && <span className="pill pill-cursed"><IconPotion size={12} /> Maudit</span>}
             {f.state === "UNAVAILABLE" && <span className="pill pill-decline">🙅 Pas dispo</span>}
             {f.state === "AVAILABLE" && <span className="pill pill-cheers">🍻 Chaud</span>}
             {f.state === "NEUTRAL" && <span className="pill">Non prononcé</span>}

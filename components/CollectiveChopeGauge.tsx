@@ -1,9 +1,10 @@
 "use client";
 
+import { IconBeer } from "./icons";
+
 // La chope collective : son niveau reflète le % d'amis "chauds" en ce moment.
-// À 10 amis chauds ou plus, elle déborde en continu. Le remplissage est
-// animé (transition CSS), le liquide oscille légèrement, quelques bulles
-// montent, et des gouttes coulent en cas de débordement.
+// À 10 amis chauds ou plus, elle déborde en continu. C'est LE moment
+// signature de l'accueil — tout le reste autour reste volontairement calme.
 export default function CollectiveChopeGauge({ hotCount }: { hotCount: number }) {
   const pct = Math.min(100, Math.round((hotCount / 10) * 100));
   const overflowing = hotCount >= 10;
@@ -17,7 +18,7 @@ export default function CollectiveChopeGauge({ hotCount }: { hotCount: number })
 
   return (
     <div className="collective-gauge-wrap">
-      <svg width="120" height="140" viewBox="0 0 120 140" className={overflowing ? "collective-glow" : ""}>
+      <svg width="152" height="176" viewBox="0 0 120 140" className={overflowing ? "collective-glow" : ""}>
         <defs>
           <linearGradient id="cg-beer" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#f8ce74" />
@@ -28,10 +29,10 @@ export default function CollectiveChopeGauge({ hotCount }: { hotCount: number })
           </clipPath>
         </defs>
 
-        {/* Verre (contour) */}
-        <path d="M30 24 H90 V96 Q90 106 80 106 H40 Q30 106 30 96 Z" fill="rgba(242,238,230,0.04)" stroke="rgba(242,238,230,0.25)" strokeWidth="2" />
+        {/* Verre (contour) — teinté cuivre, pas juste gris neutre */}
+        <path d="M30 24 H90 V96 Q90 106 80 106 H40 Q30 106 30 96 Z" fill="rgba(74,144,164,0.05)" stroke="rgba(74,144,164,0.4)" strokeWidth="2" />
         {/* Anse */}
-        <path d="M90 40 Q108 40 108 58 Q108 76 90 76" fill="none" stroke="rgba(242,238,230,0.25)" strokeWidth="4" />
+        <path d="M90 40 Q108 40 108 58 Q108 76 90 76" fill="none" stroke="rgba(74,144,164,0.4)" strokeWidth="4" />
 
         {/* Liquide, animé via clipPath */}
         <g clipPath="url(#cg-clip)">
@@ -81,11 +82,17 @@ export default function CollectiveChopeGauge({ hotCount }: { hotCount: number })
         )}
       </svg>
       <p className="collective-gauge-label">
-        {hotCount === 0
-          ? "Personne de chaud pour l'instant"
-          : overflowing
-          ? "🍺 Ça déborde — le groupe est prêt !"
-          : `🍺 ${hotCount} pote${hotCount > 1 ? "s" : ""} chaud${hotCount > 1 ? "s" : ""}`}
+        {hotCount === 0 ? (
+          "Personne de chaud pour l'instant"
+        ) : overflowing ? (
+          <>
+            <IconBeer size={14} /> Ça déborde — le groupe est prêt !
+          </>
+        ) : (
+          <>
+            <IconBeer size={14} /> {hotCount} pote{hotCount > 1 ? "s" : ""} chaud{hotCount > 1 ? "s" : ""}
+          </>
+        )}
       </p>
     </div>
   );

@@ -11,6 +11,7 @@ import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import BadgeChip from "@/components/BadgeChip";
 import ChopeCard from "@/components/ChopeCard";
+import { IconSettings } from "@/components/icons";
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
   const me = await getCurrentUser();
@@ -37,11 +38,11 @@ export default async function ProfilePage({ params }: { params: { username: stri
   ]);
 
   const badges = [
-    hosts[0]?.userId === profileUser.id && { icon: "🏅", title: "Meilleur hôte", sub: `${hosts[0].value} "banco" reçus` },
-    streaks[0]?.userId === profileUser.id && { icon: "🔥", title: "Le plus chaud sans interruption", sub: `${streaks[0].value} jour${streaks[0].value > 1 ? "s" : ""} d'affilée` },
-    cold[0]?.userId === profileUser.id && { icon: "🥶", title: "Le moins chaud", sub: `${cold[0].value} refus déclarés` },
-    cursed[0]?.userId === profileUser.id && { icon: "🔮", title: "Le plus maudit", sub: `${cursed[0].value} malédiction${cursed[0].value > 1 ? "s" : ""}` },
-  ].filter(Boolean) as { icon: string; title: string; sub: string }[];
+    hosts[0]?.userId === profileUser.id && { icon: "host" as const, title: "Meilleur hôte", sub: `${hosts[0].value} "banco" reçus` },
+    streaks[0]?.userId === profileUser.id && { icon: "streak" as const, title: "Le plus chaud sans interruption", sub: `${streaks[0].value} jour${streaks[0].value > 1 ? "s" : ""} d'affilée` },
+    cold[0]?.userId === profileUser.id && { icon: "cold" as const, title: "Le moins chaud", sub: `${cold[0].value} refus déclarés` },
+    cursed[0]?.userId === profileUser.id && { icon: "cursed" as const, title: "Le plus maudit", sub: `${cursed[0].value} malédiction${cursed[0].value > 1 ? "s" : ""}` },
+  ].filter(Boolean) as { icon: import("@/lib/badges").BadgeIconKey; title: string; sub: string }[];
 
   const statRow = (label: string, rows: { userId: string; value: number }[]) =>
     rows.find((r) => r.userId === profileUser.id)?.value ?? 0;
@@ -54,7 +55,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
           <span className="brand-mark">👤</span> {profileUser.username}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ fontSize: 18, padding: "6px 8px" }} title="Réglages">⚙️</Link>
+          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
           <NotificationBell />
           <LogoutButton />
         </div>

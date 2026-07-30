@@ -18,6 +18,65 @@
   --decline: #e2685c;
   --radius: 18px;
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+
+  /* Échelle typographique — à utiliser via .text-xs .. .text-2xl plutôt
+     que des tailles au cas par cas dans les styles inline. */
+  --fs-xs: 11px;
+  --fs-sm: 13px;
+  --fs-base: 15px;
+  --fs-lg: 18px;
+  --fs-xl: 22px;
+  --fs-2xl: 30px;
+}
+
+.text-xs {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+.text-sm {
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+}
+.text-base {
+  font-size: var(--fs-base);
+  line-height: 1.5;
+}
+.text-lg {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 600;
+  font-size: var(--fs-lg);
+  line-height: 1.3;
+}
+.text-xl {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: var(--fs-xl);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.text-2xl {
+  font-family: "Fredoka", sans-serif;
+  font-weight: 700;
+  font-size: var(--fs-2xl);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.text-dim {
+  color: var(--foam-dim);
+}
+
+/* Rangées de liste légères (amis, participants...) — plus discrètes qu'une
+   pile de cartes individuelles, séparées par un simple filet. */
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 4px;
+  border-bottom: 1px solid rgba(242, 238, 230, 0.07);
+}
+.list-row:last-child {
+  border-bottom: none;
 }
 
 * {
@@ -769,8 +828,8 @@ textarea {
 .availability-title {
   font-family: "Fredoka", sans-serif;
   font-weight: 700;
-  font-size: 18px;
-  margin: 0 0 14px;
+  font-size: var(--fs-lg);
+  margin: 0 0 6px;
   text-align: center;
 }
 
@@ -778,6 +837,9 @@ textarea {
   display: flex;
   justify-content: space-around;
   text-align: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(242, 238, 230, 0.08);
 }
 
 .availability-stat {
@@ -788,12 +850,14 @@ textarea {
 
 .availability-stat strong {
   font-family: "Fredoka", sans-serif;
-  font-size: 24px;
+  font-size: var(--fs-lg);
+  color: var(--foam-dim);
 }
 
 .availability-stat span {
-  font-size: 11px;
+  font-size: var(--fs-xs);
   color: var(--foam-dim);
+  opacity: 0.75;
 }
 
 .availability-stat.hot strong {
@@ -809,8 +873,6 @@ textarea {
   flex-wrap: wrap;
   gap: 6px;
   margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(242, 238, 230, 0.08);
 }
 
 .chope-card {
@@ -1011,10 +1073,14 @@ textarea {
 .collective-gauge-label {
   font-family: "Fredoka", sans-serif;
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--foam-dim);
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .avatars-row {

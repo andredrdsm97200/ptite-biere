@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconPotion } from "./icons";
 
 export default function CurseButton({
   inviteId,
@@ -49,7 +50,7 @@ export default function CurseButton({
   if (done) {
     return (
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <span className="pill pill-cursed">🔮 Maudit</span>
+        <span className="pill pill-cursed"><IconPotion size={12} /> Maudit</span>
         <button className="btn-curse" disabled={loading} onClick={handleLift}>
           {loading ? "..." : "Lever"}
         </button>
@@ -58,8 +59,12 @@ export default function CurseButton({
   }
 
   return (
-    <button className="btn-curse" disabled={loading} onClick={handleCurse}>
-      {loading ? "..." : "🔮 Maudire"}
+    <button className="btn-curse" disabled={loading} onClick={handleCurse} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+      {loading ? "..." : (
+        <>
+          <IconPotion size={12} /> Maudire
+        </>
+      )}
     </button>
   );
 }

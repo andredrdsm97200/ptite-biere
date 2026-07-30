@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { enablePushNotifications } from "@/lib/push-client";
+import { IconBell } from "./icons";
 
 export default function NotificationBell() {
   const [enabled, setEnabled] = useState<boolean | null>(null);
@@ -33,9 +34,16 @@ export default function NotificationBell() {
       className="nav-link"
       onClick={handleClick}
       title={enabled ? "Notifications activées" : "Activer les notifications"}
-      style={{ background: "none", border: "none", cursor: enabled ? "default" : "pointer", fontSize: 18, padding: "6px 8px" }}
+      style={{
+        background: "none",
+        border: "none",
+        cursor: enabled ? "default" : "pointer",
+        padding: "6px 8px",
+        display: "flex",
+        color: enabled ? "var(--amber)" : "var(--foam-dim)",
+      }}
     >
-      {loading ? "..." : enabled ? "🔔" : "🔕"}
+      <IconBell size={19} off={!enabled} />
     </button>
   );
 }

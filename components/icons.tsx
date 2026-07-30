@@ -64,3 +64,80 @@ export function IconSleep({ size = 22, className }: IconProps) {
     </svg>
   );
 }
+
+export function IconPin({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <path d="M12 21.5c4-4.2 7-7.9 7-11.5a7 7 0 1 0-14 0c0 3.6 3 7.3 7 11.5Z" />
+      <circle cx="12" cy="10" r="2.4" />
+    </svg>
+  );
+}
+
+export function IconBell({ size = 22, className, off }: IconProps & { off?: boolean }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <path d="M6 10a6 6 0 0 1 12 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6Z" />
+      <path d="M9.5 19a2.5 2.5 0 0 0 5 0" />
+      {off && <path d="M4 4l16 16" />}
+    </svg>
+  );
+}
+
+export function IconSettings({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M12 3.5v2.4M12 18.1v2.4M20.5 12h-2.4M5.9 12H3.5M17.7 6.3l-1.7 1.7M8 16l-1.7 1.7M17.7 17.7 16 16M8 8 6.3 6.3" />
+    </svg>
+  );
+}
+
+export function IconPotion({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <path d="M10 3h4" />
+      <path d="M10.5 3v4.2L6 15.6C4.8 17.8 6.4 20.5 9 20.5h6c2.6 0 4.2-2.7 3-4.9l-4.5-8.4V3" />
+      <path d="M8.2 15.5h7.6" />
+      <circle cx="11" cy="18" r="0.6" fill="currentColor" stroke="none" />
+      <circle cx="13.4" cy="17" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function IconFlame({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <path d="M12 21c4 0 6.5-2.6 6.5-6 0-2.6-1.6-4-2.6-5.6-.4.9-1 1.6-1.8 2 .3-2.4-.7-5-3.1-6.9-.3 2-1 3.2-2.4 4.8C6.9 11 5.5 12.7 5.5 15c0 3.4 2.5 6 6.5 6Z" />
+      <path d="M12 21c1.7 0 3-1.2 3-2.8 0-1.4-1-2.2-1.6-3.1-.5 1.4-1.7 2-1.7 2s-.6-.7-.4-1.7c-1 .8-2 1.9-2 3 0 1.4 1.2 2.6 2.7 2.6Z" />
+    </svg>
+  );
+}
+
+export function IconCrown({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <path d="M4 18h16l-1.4-8.2-4 3.4L12 6l-2.6 7.2-4-3.4L4 18Z" />
+      <path d="M6 21h12" />
+    </svg>
+  );
+}
+
+export function IconCheck({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12.3l2.6 2.6L16 9.5" />
+    </svg>
+  );
+}
+
+export function IconMedal({ size = 22, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className} {...base}>
+      <path d="M8 3h8l-2.5 6.5h-3L8 3Z" />
+      <circle cx="12" cy="14.5" r="6" />
+      <path d="M12 11.5v6M9.6 13l4.8 3M14.4 13l-4.8 3" />
+    </svg>
+  );
+}
