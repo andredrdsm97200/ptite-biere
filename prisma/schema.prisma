@@ -41,6 +41,31 @@ model User {
   cursesReceived Curse[]     @relation("CursedUser")
   cursesGiven    Curse[]     @relation("CursedBy")
   credentials    Credential[]
+  teams          Team[]
+}
+
+// Une Team = un sous-ensemble d'amis nommé, pour aller plus vite au moment
+// d'inviter (ex: "Les copains", "Collègues"...). Propre à chaque utilisateur.
+model Team {
+  id        String   @id @default(cuid())
+  ownerId   String
+  name      String
+  icon      String   @default("🍺")
+  favorite  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  owner   User         @relation(fields: [ownerId], references: [id])
+  members TeamMember[]
+}
+
+model TeamMember {
+  id     String @id @default(cuid())
+  teamId String
+  userId String // l'ami membre de cette Team
+
+  team Team @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, userId])
 }
 
 // Une clé d'accès biométrique (Face ID, Touch ID, empreinte Android...)

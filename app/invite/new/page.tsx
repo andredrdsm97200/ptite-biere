@@ -38,6 +38,12 @@ export default async function NewInvitePage() {
       return rank[a.state] - rank[b.state];
     });
 
+  const teams = await prisma.team.findMany({
+    where: { ownerId: me.id },
+    include: { members: true },
+    orderBy: [{ favorite: "desc" }, { createdAt: "asc" }],
+  });
+
   return (
     <div className={`screen ${intense ? "mood-intense" : ""}`} data-mood={mood}>
       <MoodEffects mood={mood} intense={intense} />
@@ -52,7 +58,10 @@ export default async function NewInvitePage() {
         </div>
       </div>
       <div className="container">
-        <InviteComposer friends={friends} />
+        <InviteComposer
+          friends={friends}
+          teams={teams.map((t) => ({ id: t.id, name: t.name, icon: t.icon, memberIds: t.members.map((m) => m.userId) }))}
+        />
       </div>
       <BottomNav />
     </div>

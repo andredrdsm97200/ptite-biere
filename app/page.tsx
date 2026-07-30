@@ -16,6 +16,7 @@ import MoodEffects from "@/components/MoodEffects";
 import AutoRefresh from "@/components/AutoRefresh";
 import PlansSection from "@/components/PlansSection";
 import AvailabilitySummary from "@/components/AvailabilitySummary";
+import DeclicCard from "@/components/DeclicCard";
 import ChopeArt from "@/components/ChopeArt";
 
 export default async function DashboardPage() {
@@ -83,6 +84,8 @@ export default async function DashboardPage() {
         </Link>
 
         <AvailabilitySummary friends={friendsWithStatus} />
+
+        <DeclicCard hotCount={friendsWithStatus.filter((f) => f.status === "AVAILABLE").length} />
 
         <DrinkStatusToggle initialStatus={effectiveDrinkStatus(user.drinkStatus, user.drinkStatusDate)} />
 

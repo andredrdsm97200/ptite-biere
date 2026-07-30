@@ -1,3 +1,5 @@
+import CollectiveChopeGauge from "./CollectiveChopeGauge";
+
 type Friend = { id: string; username: string; status: "AVAILABLE" | "UNAVAILABLE" | null };
 
 export default function AvailabilitySummary({ friends }: { friends: Friend[] }) {
@@ -19,6 +21,7 @@ export default function AvailabilitySummary({ friends }: { friends: Friend[] }) 
   return (
     <div className="availability-card">
       <p className="availability-title">Qui est chaud aujourd'hui ?</p>
+      <CollectiveChopeGauge hotCount={hot.length} />
       <div className="availability-stats">
         <div className="availability-stat hot">
           <strong>{hot.length}</strong>

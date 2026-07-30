@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Friend = { id: string; username: string; state: "UNAVAILABLE" | "AVAILABLE" | "NEUTRAL"; cursed?: boolean };
+type Team = { id: string; name: string; icon: string; memberIds: string[] };
 
 const QUICK_MESSAGES = [
   "Je finis le taff dans 10 min, ça vous dit ?",
@@ -12,11 +13,12 @@ const QUICK_MESSAGES = [
   "Urgence bière. Aucune autre explication nécessaire.",
 ];
 
-export default function InviteComposer({ friends }: { friends: Friend[] }) {
+export default function InviteComposer({ friends, teams = [] }: { friends: Friend[]; teams?: Team[] }) {
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [location, setLocation] = useState("");
   const [showRecipients, setShowRecipients] = useState(true);
+  const [activeTeam, setActiveTeam] = useState<string | null>(null);
   const [selected, setSelected] = useState<string[]>(() =>
     friends.filter((f) => f.state === "AVAILABLE").map((f) => f.id)
   );
@@ -24,7 +26,13 @@ export default function InviteComposer({ friends }: { friends: Friend[] }) {
   const [loading, setLoading] = useState(false);
 
   function toggleFriend(id: string) {
+    setActiveTeam(null);
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
+  function pickTeam(team: Team) {
+    setActiveTeam(team.id);
+    setSelected(team.memberIds);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -97,6 +105,24 @@ export default function InviteComposer({ friends }: { friends: Friend[] }) {
       </div>
 
       <div className="section-title">À qui ?</div>
+      {teams.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
+          {teams.map((t) => (
+            <button
+              type="button"
+              key={t.id}
+              onClick={() => pickTeam(t)}
+              className="pill"
+              style={{
+                border: activeTeam === t.id ? "1px solid var(--amber)" : "1px solid transparent",
+                cursor: "pointer",
+              }}
+            >
+              {t.icon} {t.name}
+            </button>
+          ))}
+        </div>
+      )}
       <p style={{ fontSize: 12, color: "var(--foam-dim)", marginTop: -4, marginBottom: 10 }}>
         Les potes "chauds" sont déjà cochés. Décoche ou recoche comme tu veux.
       </p>

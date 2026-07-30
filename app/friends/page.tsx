@@ -11,6 +11,7 @@ import NotificationBell from "@/components/NotificationBell";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import FriendsManager from "@/components/FriendsManager";
+import TeamsManager from "@/components/TeamsManager";
 import ContactsFinder from "@/components/ContactsFinder";
 import PhoneSetup from "@/components/PhoneSetup";
 import MoodEffects from "@/components/MoodEffects";
@@ -59,6 +60,12 @@ export default async function FriendsPage() {
       return { friendshipId: f.id, id: friend.id, username: friend.username };
     });
 
+  const teams = await prisma.team.findMany({
+    where: { ownerId: me.id },
+    include: { members: true },
+    orderBy: [{ favorite: "desc" }, { createdAt: "asc" }],
+  });
+
   return (
     <div className={`screen ${intense ? "mood-intense" : ""}`} data-mood={mood}>
       <MoodEffects mood={mood} intense={intense} />
@@ -76,6 +83,9 @@ export default async function FriendsPage() {
         {!me.phone && <PhoneSetup />}
         <ContactsFinder username={me.username} />
         <FriendsManager accepted={accepted} incoming={incoming} outgoing={outgoing} badgeMap={badgeMap} chopeMap={chopeMap} />
+
+        <div className="section-title">Tes Teams</div>
+        <TeamsManager teams={teams} friends={accepted.map((f) => ({ id: f.id, username: f.username }))} />
       </div>
       <BottomNav />
     </div>
