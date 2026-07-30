@@ -3,14 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IconBeer, IconMegaphone, IconUsers, IconTrophy } from "./icons";
-
-const tabs = [
-  { href: "/", Icon: IconBeer, label: "Accueil", badgeKey: "invites" as const },
-  { href: "/invite/new", Icon: IconMegaphone, label: "Inviter", badgeKey: null },
-  { href: "/friends", Icon: IconUsers, label: "Amis", badgeKey: "friendRequests" as const },
-  { href: "/leaderboard", Icon: IconTrophy, label: "Classement", badgeKey: null },
-];
+import { IconBeer, IconUsers, IconTrophy, IconUser } from "./icons";
 
 // Viewbox fixe + preserveAspectRatio="none" : le tracé s'étire exactement
 // sur la largeur réelle de la barre, donc l'encoche reste alignée avec la
@@ -21,8 +14,8 @@ const CORNER = 32; // pilule bien arrondie
 const NOTCH_HALF = 42;
 const NOTCH_DEPTH = 34;
 
-function notchPath(activeIndex: number) {
-  const cx = ((activeIndex + 0.5) / tabs.length) * VB_W;
+function notchPath(activeIndex: number, tabCount: number) {
+  const cx = ((activeIndex + 0.5) / tabCount) * VB_W;
   const x1 = cx - NOTCH_HALF;
   const x2 = cx + NOTCH_HALF;
   return [
@@ -42,9 +35,16 @@ function notchPath(activeIndex: number) {
   ].join(" ");
 }
 
-export default function BottomNav() {
+export default function BottomNav({ username }: { username?: string }) {
   const pathname = usePathname();
   const [counts, setCounts] = useState({ friendRequests: 0, invites: 0 });
+
+  const tabs = [
+    { href: "/", Icon: IconBeer, label: "Accueil", badgeKey: "invites" as const },
+    { href: "/friends", Icon: IconUsers, label: "Teams", badgeKey: "friendRequests" as const },
+    { href: "/leaderboard", Icon: IconTrophy, label: "Chope", badgeKey: null },
+    { href: username ? `/u/${username}` : "/settings", Icon: IconUser, label: "Profil", badgeKey: null },
+  ];
 
   useEffect(() => {
     let cancelled = false;
@@ -67,7 +67,7 @@ export default function BottomNav() {
 
   const activeIndex = Math.max(
     0,
-    tabs.findIndex((t) => (t.href === "/" ? pathname === "/" : pathname.startsWith(t.href)))
+    tabs.findIndex((t) => (t.href === "/" ? pathname === "/" : pathname.startsWith(t.href.split("?")[0])))
   );
 
   return (
@@ -78,7 +78,7 @@ export default function BottomNav() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path className="nav-shape" d={notchPath(activeIndex)} />
+        <path className="nav-shape" d={notchPath(activeIndex, tabs.length)} />
       </svg>
 
       <div
@@ -91,7 +91,7 @@ export default function BottomNav() {
         const count = tab.badgeKey ? counts[tab.badgeKey] : 0;
         const Icon = tab.Icon;
         return (
-          <Link key={tab.href} href={tab.href} className={active ? "active" : ""}>
+          <Link key={tab.label} href={tab.href} className={active ? "active" : ""}>
             <span className="icon" style={{ position: "relative" }}>
               <Icon />
               {count > 0 && <span className="nav-badge">{count > 9 ? "9+" : count}</span>}

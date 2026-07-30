@@ -96,7 +96,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
         </div>
       </div>
 
-      <BottomNav />
+      <BottomNav username={me.username} />
     </div>
   );
 }

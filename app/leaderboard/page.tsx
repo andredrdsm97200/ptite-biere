@@ -174,7 +174,7 @@ export default async function LeaderboardPage() {
         <RankingList rows={cursed} meId={me.id} unit="malédictions" badgeMap={badgeMap} />
       </div>
 
-      <BottomNav />
+      <BottomNav username={me.username} />
     </div>
   );
 }

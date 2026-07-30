@@ -88,7 +88,7 @@ export default async function FriendsPage() {
         <div className="section-title">Tes Teams</div>
         <TeamsManager teams={teams} friends={accepted.map((f) => ({ id: f.id, username: f.username }))} />
       </div>
-      <BottomNav />
+      <BottomNav username={me.username} />
     </div>
   );
 }

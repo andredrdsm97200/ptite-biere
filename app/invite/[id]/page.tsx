@@ -182,7 +182,7 @@ export default async function InvitePage({ params }: { params: { id: string } })
         )}
       </div>
 
-      <BottomNav />
+      <BottomNav username={me.username} />
     </div>
   );
 }

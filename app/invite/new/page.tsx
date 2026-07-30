@@ -64,7 +64,7 @@ export default async function NewInvitePage() {
           teams={teams.map((t) => ({ id: t.id, name: t.name, icon: t.icon, memberIds: t.members.map((m) => m.userId) }))}
         />
       </div>
-      <BottomNav />
+      <BottomNav username={me.username} />
     </div>
   );
 }

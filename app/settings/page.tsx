@@ -7,7 +7,9 @@ import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import DeleteAccountForm from "@/components/DeleteAccountForm";
+import AdminSelfPardon from "@/components/AdminSelfPardon";
 import { IconSettings } from "@/components/icons";
+import { isAdminUser } from "@/lib/admin";
 
 export default async function SettingsPage() {
   const me = await getCurrentUser();
@@ -31,7 +33,14 @@ export default async function SettingsPage() {
       </div>
 
       <div className="container">
-        <div className="section-title" style={{ marginTop: 0 }}>Ton compte</div>
+        {isAdminUser(me) && mood === "cursed" && (
+          <>
+            <div className="section-title" style={{ marginTop: 0 }}>Toi seul vois ceci</div>
+            <AdminSelfPardon />
+          </>
+        )}
+
+        <div className="section-title">Ton compte</div>
         <div className="card">
           <div className="row" style={{ padding: "4px 0" }}>
             <span style={{ color: "var(--foam-dim)" }}>Pseudo</span>
@@ -47,7 +56,7 @@ export default async function SettingsPage() {
         <DeleteAccountForm />
       </div>
 
-      <BottomNav />
+      <BottomNav username={me.username} />
     </div>
   );
 }

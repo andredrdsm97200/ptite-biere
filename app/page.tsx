@@ -67,7 +67,8 @@ export default async function DashboardPage() {
       <AutoRefresh />
       <div className="topbar">
         <div className="brand">
-          <span className="brand-mark">🍺</span> P'tite bière ?
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="P'tite bière ?" className="brand-logo" />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
@@ -110,7 +111,7 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <BottomNav />
+      <BottomNav username={user.username} />
     </div>
   );
 }

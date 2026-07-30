@@ -157,6 +157,12 @@ textarea {
   font-size: 18px;
 }
 
+.brand-logo {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
 .brand-mark {
   font-size: 20px;
 }
