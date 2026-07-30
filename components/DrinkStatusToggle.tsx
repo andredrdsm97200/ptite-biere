@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { IconBeer, IconSleep } from "./icons";
+import { IconBeer } from "./icons";
 
 type Status = "AVAILABLE" | "UNAVAILABLE" | null;
 
@@ -25,30 +25,40 @@ export default function DrinkStatusToggle({ initialStatus }: { initialStatus: St
     router.refresh();
   }
 
-  return (
-    <div className="mood-picker">
-      <p className="mood-picker-label">Envie de boire aujourd'hui ?</p>
-      <div className="mood-picker-track">
-        <div
-          className={`mood-picker-fill ${status === "AVAILABLE" ? "hot" : status === "UNAVAILABLE" ? "cold" : "neutral"}`}
-        />
-        <button
-          className={`mood-picker-btn ${status === "AVAILABLE" ? "active" : ""}`}
-          disabled={loading}
-          onClick={() => save(status === "AVAILABLE" ? null : "AVAILABLE")}
-        >
-          <IconBeer size={18} />
-          Chaud
+  if (status === "AVAILABLE") {
+    return (
+      <div className="cta-block">
+        <button className="btn-cta-hot active" disabled={loading} onClick={() => save(null)}>
+          <IconBeer size={22} /> T'ES CHAUD 🔥
         </button>
-        <button
-          className={`mood-picker-btn ${status === "UNAVAILABLE" ? "active" : ""}`}
-          disabled={loading}
-          onClick={() => save(status === "UNAVAILABLE" ? null : "UNAVAILABLE")}
-        >
-          <IconSleep size={18} />
-          Pas envie
+        <button className="cta-secondary" onClick={() => save(null)} disabled={loading}>
+          Annuler
         </button>
       </div>
+    );
+  }
+
+  if (status === "UNAVAILABLE") {
+    return (
+      <div className="cta-block">
+        <button className="btn-cta-cold" disabled={loading} onClick={() => save(null)}>
+          Pas envie aujourd'hui
+        </button>
+        <button className="cta-secondary" onClick={() => save("AVAILABLE")} disabled={loading}>
+          Finalement, je suis chaud
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="cta-block">
+      <button className="btn-cta-hot" disabled={loading} onClick={() => save("AVAILABLE")}>
+        <IconBeer size={22} /> JE SUIS CHAUD
+      </button>
+      <button className="cta-secondary" onClick={() => save("UNAVAILABLE")} disabled={loading}>
+        sans moi aujourd'hui
+      </button>
     </div>
   );
 }

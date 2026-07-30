@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/icons/icon-192.png" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&family=Caveat:wght@600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap"
           rel="stylesheet"
         />
       </head>

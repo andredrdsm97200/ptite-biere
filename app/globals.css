@@ -1,26 +1,25 @@
 /* ---------------------------------------------------------------
-   Système de design — "La Chope" (thème sombre)
-   Anthracite / Amber (bière) / Copper (accent secondaire)
-   Foam (texte clair) / Cheers (vert "banco")
-   Display : Fredoka — Corps : Nunito — Note manuscrite : Caveat
+   Système de design — "La Chope" v2 (fond noir, typo massive)
+   Noir pur / Ambre (marque) / Vert (action "chaud") / Cuivre (secondaire)
+   Foam (texte clair) / Decline (refus/alerte)
+   Display choc : Anton — Corps : Nunito — Note manuscrite : Caveat
    ----------------------------------------------------------------*/
 
 :root {
-  --ink: #17181c;
-  --ink-2: #1f2126;
-  --ink-3: #262932;
+  --ink: #030303;
+  --ink-2: #141414;
+  --ink-3: #1e1e1e;
   --amber: #f2a93b;
   --amber-dim: #d68b1f;
   --copper: #4a90a4;
   --foam: #f2eee6;
   --foam-dim: #9a9aa2;
-  --cheers: #6bbf7a;
+  --cheers: #8bc53f;
+  --cheers-dim: #6ea62a;
   --decline: #e2685c;
   --radius: 18px;
-  --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  --shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
 
-  /* Échelle typographique — à utiliser via .text-xs .. .text-2xl plutôt
-     que des tailles au cas par cas dans les styles inline. */
   --fs-xs: 11px;
   --fs-sm: 13px;
   --fs-base: 15px;
@@ -42,20 +41,20 @@
   line-height: 1.5;
 }
 .text-lg {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 600;
   font-size: var(--fs-lg);
   line-height: 1.3;
 }
 .text-xl {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 700;
   font-size: var(--fs-xl);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 .text-2xl {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 700;
   font-size: var(--fs-2xl);
   line-height: 1.1;
@@ -109,7 +108,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -153,7 +152,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 700;
   font-size: 18px;
 }
@@ -484,8 +483,8 @@ textarea {
   text-decoration: none;
   color: var(--foam-dim);
   font-size: 11px;
-  font-family: "Fredoka", sans-serif;
-  font-weight: 600;
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -746,75 +745,61 @@ textarea {
   color: var(--amber);
 }
 
-.mood-picker {
-  background: var(--ink-2);
-  border-radius: 20px;
-  padding: 14px 14px 16px;
-  margin-bottom: 14px;
-}
-
-.mood-picker-label {
-  font-size: 12px;
-  color: var(--foam-dim);
-  margin: 0 0 10px;
-  text-align: center;
-}
-
-.mood-picker-track {
-  position: relative;
+.cta-block {
   display: flex;
-  background: var(--ink);
-  border-radius: 999px;
-  padding: 4px;
-  gap: 4px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
-.mood-picker-fill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  width: calc(50% - 4px);
-  border-radius: 999px;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s;
-  background: transparent;
-}
-
-.mood-picker-fill.hot {
-  background: var(--cheers);
-  transform: translateX(0%);
-}
-
-.mood-picker-fill.cold {
-  background: var(--decline);
-  transform: translateX(calc(100% + 4px));
-}
-
-.mood-picker-fill.neutral {
-  background: transparent;
-}
-
-.mood-picker-btn {
-  position: relative;
-  z-index: 1;
-  flex: 1;
+.btn-cta-hot {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 10px;
   border: none;
-  background: none;
-  padding: 10px 6px;
-  font-family: "Fredoka", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--foam-dim);
+  background: linear-gradient(180deg, var(--cheers), var(--cheers-dim));
+  color: #0d1f04;
+  font-family: "Anton", sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  padding: 20px;
   border-radius: 999px;
   cursor: pointer;
-  transition: color 0.3s;
+  box-shadow: 0 10px 26px rgba(139, 197, 63, 0.3);
+  transition: transform 0.15s ease;
+}
+.btn-cta-hot:active {
+  transform: scale(0.97);
+}
+.btn-cta-hot.active {
+  background: linear-gradient(180deg, var(--amber), var(--amber-dim));
+  color: #241404;
+  box-shadow: 0 10px 26px rgba(242, 169, 59, 0.3);
 }
 
-.mood-picker-btn.active {
-  color: #fffaf2;
+.btn-cta-cold {
+  width: 100%;
+  border: 1.5px solid rgba(226, 104, 92, 0.5);
+  background: rgba(226, 104, 92, 0.08);
+  color: var(--decline);
+  font-family: "Anton", sans-serif;
+  font-size: 18px;
+  padding: 18px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.cta-secondary {
+  background: none;
+  border: none;
+  color: var(--foam-dim);
+  font-size: var(--fs-sm);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px;
 }
 
 .availability-card {
@@ -826,53 +811,11 @@ textarea {
 }
 
 .availability-title {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 700;
   font-size: var(--fs-lg);
   margin: 0 0 6px;
   text-align: center;
-}
-
-.availability-stats {
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(242, 238, 230, 0.08);
-}
-
-.availability-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.availability-stat strong {
-  font-family: "Fredoka", sans-serif;
-  font-size: var(--fs-lg);
-  color: var(--foam-dim);
-}
-
-.availability-stat span {
-  font-size: var(--fs-xs);
-  color: var(--foam-dim);
-  opacity: 0.75;
-}
-
-.availability-stat.hot strong {
-  color: var(--cheers);
-}
-
-.availability-stat.cold strong {
-  color: var(--decline);
-}
-
-.availability-names {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
 }
 
 .chope-card {
@@ -897,7 +840,7 @@ textarea {
 }
 
 .chope-name {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 700;
   font-size: 18px;
   margin: 10px 0 2px;
@@ -1005,7 +948,7 @@ textarea {
 }
 
 .declic-title {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 700;
   font-size: 14px;
   margin: 0;
@@ -1020,13 +963,156 @@ textarea {
 
 .collective-gauge-wrap {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 18px;
   margin-bottom: 4px;
+  padding: 4px 4px 0;
+}
+
+.collective-scale {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 152px;
+  padding: 2px 0;
+  font-family: "Anton", sans-serif;
+  font-size: 13px;
+  color: var(--foam-dim);
+  opacity: 0.5;
+}
+
+.collective-scale span.reached {
+  color: var(--amber);
+  opacity: 1;
+}
+
+.collective-scale-marker {
+  position: absolute;
+  right: -9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 8px rgba(242, 169, 59, 0.7);
+  transition: bottom 0.9s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.collective-glass-col {
+  position: relative;
+}
+
+.collective-callout {
+  position: absolute;
+  top: -6px;
+  right: -14px;
+  background: var(--ink-3);
+  border: 1px solid rgba(242, 169, 59, 0.4);
+  color: var(--amber);
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  transform: rotate(3deg);
 }
 
 .collective-liquid {
   transition: y 0.9s cubic-bezier(0.34, 1.2, 0.64, 1), height 0.9s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.avatar-ring-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.avatar-ring-item {
+  display: flex;
+}
+
+.avatar-ring-circle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  color: var(--foam-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Anton", sans-serif;
+  font-size: 15px;
+  border: 2.5px solid rgba(242, 238, 230, 0.1);
+  opacity: 0.5;
+}
+
+.avatar-ring-circle.hot {
+  border-color: var(--cheers);
+  color: var(--foam);
+  opacity: 1;
+  box-shadow: 0 0 0 2px rgba(139, 197, 63, 0.2);
+}
+
+.avatar-ring-circle.cold {
+  border-color: transparent;
+  filter: grayscale(1);
+}
+
+.avatar-ring-zzz {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--ink);
+  border-radius: 6px;
+  font-size: 8px;
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
+  padding: 1px 3px;
+  color: var(--foam-dim);
+}
+
+.avatar-ring-more {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--ink-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--foam-dim);
+  font-weight: 700;
+}
+
+.availability-count {
+  text-align: center;
+  font-size: var(--fs-base);
+  color: var(--foam);
+  margin: 14px 0 0;
+}
+.availability-count strong {
+  font-family: "Anton", sans-serif;
+  font-size: var(--fs-xl);
+  color: var(--amber);
+}
+
+.availability-hype {
+  text-align: center;
+  font-family: "Anton", sans-serif;
+  font-size: var(--fs-base);
+  color: var(--cheers);
+  margin: 6px 0 0;
+  letter-spacing: 0.02em;
+}
+
+.availability-avatars {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(242, 238, 230, 0.08);
 }
 
 .collective-wave {
@@ -1070,18 +1156,6 @@ textarea {
   filter: drop-shadow(0 0 10px rgba(242, 169, 59, 0.35));
 }
 
-.collective-gauge-label {
-  font-family: "Fredoka", sans-serif;
-  font-weight: 600;
-  font-size: var(--fs-sm);
-  color: var(--foam-dim);
-  margin: 6px 0 0;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
 
 .avatars-row {
   display: flex;
@@ -1128,7 +1202,7 @@ textarea {
 }
 
 .plans-header {
-  font-family: "Fredoka", sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 600;
   font-size: 19px;
   color: var(--foam);

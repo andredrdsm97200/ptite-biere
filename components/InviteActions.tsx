@@ -113,12 +113,12 @@ export default function InviteActions({
   }
 
   return (
-    <div style={{ display: "flex", gap: 10 }}>
-      <button className="btn btn-primary" disabled={loading} onClick={() => respond("JOINED")}>
-        🍻 J'arrive !
+    <div className="cta-block">
+      <button className="btn-cta-hot" disabled={loading} onClick={() => respond("JOINED")}>
+        🍻 J'ARRIVE !
       </button>
-      <button className="btn btn-secondary" disabled={loading} onClick={() => respond("DECLINED")}>
-        Pas cette fois
+      <button className="cta-secondary" disabled={loading} onClick={() => respond("DECLINED")}>
+        pas cette fois
       </button>
     </div>
   );

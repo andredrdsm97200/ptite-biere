@@ -104,16 +104,16 @@ export default function FriendsManager({
         <>
           <div className="section-title">Demandes reçues</div>
           {incoming.map((f) => (
-            <div key={f.friendshipId} className="card row">
-              <span>{f.username}</span>
-              <div style={{ display: "flex", gap: 8 }}>
-                <button className="btn btn-primary btn-sm" onClick={() => respond(f.friendshipId, true)}>
+            <div key={f.friendshipId} className="card">
+              <div className="row">
+                <span>{f.username}</span>
+                <button className="btn-cta-hot" style={{ width: "auto", fontSize: 14, padding: "10px 18px" }} onClick={() => respond(f.friendshipId, true)}>
                   Accepter
                 </button>
-                <button className="btn btn-danger btn-sm" onClick={() => respond(f.friendshipId, false)}>
-                  Refuser
-                </button>
               </div>
+              <button className="cta-secondary" style={{ marginTop: 6 }} onClick={() => respond(f.friendshipId, false)}>
+                refuser
+              </button>
             </div>
           ))}
         </>
