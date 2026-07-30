@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BadgeInline from "./BadgeInline";
+import type { BadgeIconKey } from "@/lib/badges";
 
 type ReceivedRow = {
   id: string;
@@ -28,7 +29,7 @@ export default function PlansSection({
 }: {
   received: ReceivedRow[];
   sent: SentInvite[];
-  badgeMap: Record<string, { icon: string; title: string }[]>;
+  badgeMap: Record<string, { icon: BadgeIconKey; title: string }[]>;
 }) {
   const hasAny = received.length > 0 || sent.length > 0;
 

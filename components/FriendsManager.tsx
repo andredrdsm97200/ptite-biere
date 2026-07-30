@@ -6,10 +6,11 @@ import Link from "next/link";
 import BadgeInline from "./BadgeInline";
 import ChopeInline from "./ChopeInline";
 import type { ChopeInfo } from "@/lib/chope";
+import type { BadgeIconKey } from "@/lib/badges";
 
 type Friend = { id: string; username: string; status?: "AVAILABLE" | "UNAVAILABLE" | null };
 type Pending = { friendshipId: string; id: string; username: string };
-type BadgeIcon = { icon: string; title: string };
+type BadgeIcon = { icon: BadgeIconKey; title: string };
 
 export default function FriendsManager({
   accepted,
