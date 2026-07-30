@@ -34,7 +34,7 @@ export default function CollectiveChopeGauge({ hotCount }: { hotCount: number })
       </div>
 
       <div className="collective-glass-col">
-        <svg width="152" height="176" viewBox="0 0 120 140" className={overflowing ? "collective-glow" : ""}>
+        <svg width="120" height="140" viewBox="0 0 120 140" className={overflowing ? "collective-glow" : ""}>
           <defs>
             <linearGradient id="cg-beer" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#ffd98a" />

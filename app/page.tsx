@@ -6,7 +6,6 @@ import { effectiveDrinkStatus } from "@/lib/drinkStatus";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
-import { getChope } from "@/lib/chope";
 import { gameDayRange } from "@/lib/gameDay";
 import LogoutButton from "@/components/LogoutButton";
 import NotificationBell from "@/components/NotificationBell";
@@ -16,8 +15,7 @@ import MoodEffects from "@/components/MoodEffects";
 import AutoRefresh from "@/components/AutoRefresh";
 import PlansSection from "@/components/PlansSection";
 import AvailabilitySummary from "@/components/AvailabilitySummary";
-import DeclicCard from "@/components/DeclicCard";
-import ChopeArt from "@/components/ChopeArt";
+import QuickActionCards from "@/components/QuickActionCards";
 import { IconSettings } from "@/components/icons";
 
 export default async function DashboardPage() {
@@ -28,7 +26,6 @@ export default async function DashboardPage() {
   const intense = mood === "cursed" ? await isCurseFresh(user.id) : false;
   const circle = await getCircle(user.id);
   const badgeMap = await getBadgeMap(circle);
-  const myChope = await getChope(user.id);
 
   const friendships = await prisma.friendship.findMany({
     where: { status: "ACCEPTED", OR: [{ userAId: user.id }, { userBId: user.id }] },
@@ -41,8 +38,32 @@ export default async function DashboardPage() {
       username: friend.username,
       status: effectiveDrinkStatus(friend.drinkStatus, friend.drinkStatusDate),
       avatarUrl: friend.avatarUrl,
+      drinkStatusDate: friend.drinkStatusDate,
     };
   });
+
+  const myStatus = effectiveDrinkStatus(user.drinkStatus, user.drinkStatusDate);
+
+  // "Tu es le Ne motivé" : rang parmi les chauds du jour, par ordre de déclaration.
+  let myRank: number | null = null;
+  if (myStatus === "AVAILABLE") {
+    const hotWithDates = [
+      ...friendsWithStatus
+        .filter((f) => f.status === "AVAILABLE")
+        .map((f) => ({ id: f.id, at: f.drinkStatusDate?.getTime() ?? 0 })),
+      { id: user.id, at: user.drinkStatusDate?.getTime() ?? 0 },
+    ].sort((a, b) => a.at - b.at);
+    myRank = hotWithDates.findIndex((f) => f.id === user.id) + 1;
+  }
+
+  // "🔥 X soirées cette semaine" : invitations (organisées ou rejointes) sur les 7 derniers jours.
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const [hostedThisWeek, joinedThisWeek] = await Promise.all([
+    prisma.invite.count({ where: { hostId: user.id, createdAt: { gte: weekAgo } } }),
+    prisma.inviteRecipient.count({ where: { userId: user.id, status: "JOINED", invite: { createdAt: { gte: weekAgo } } } }),
+  ]);
+  const soireesThisWeek = hostedThisWeek + joinedThisWeek;
 
   // La soirée du jour disparaît de l'accueil à 5h du matin (mais reste en
   // base pour les classements et les malédictions du lendemain).
@@ -90,22 +111,23 @@ export default async function DashboardPage() {
       </div>
 
       <div className="container">
-        <Link href={`/u/${user.username}`} style={{ textDecoration: "none", color: "inherit", display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-          <ChopeArt tier={myChope.tierIndex} size={26} seed="greeting" />
-          <span style={{ color: "var(--foam-dim)" }}>
-            Salut {user.username} 👋 <span style={{ textDecoration: "underline" }}>({myChope.name})</span>
-          </span>
-        </Link>
+        {soireesThisWeek > 0 && (
+          <p className="streak-line">
+            🔥 <strong>{soireesThisWeek}</strong> soirée{soireesThisWeek > 1 ? "s" : ""} cette semaine
+          </p>
+        )}
 
         <AvailabilitySummary friends={friendsWithStatus} />
 
-        <DeclicCard hotCount={friendsWithStatus.filter((f) => f.status === "AVAILABLE").length} />
+        <DrinkStatusToggle initialStatus={myStatus} />
 
-        <DrinkStatusToggle initialStatus={effectiveDrinkStatus(user.drinkStatus, user.drinkStatusDate)} />
+        {myRank && (
+          <p className="rank-line">
+            Tu es le <strong>{myRank}e</strong> motivé.
+          </p>
+        )}
 
-        <Link href="/invite/new" className="btn btn-primary" style={{ marginBottom: 18, textDecoration: "none" }}>
-          🍻 Lancer un appel
-        </Link>
+        <QuickActionCards friends={friendsWithStatus} />
 
         <PlansSection
           received={receivedRows.map((r) => ({
