@@ -1,4 +1,4 @@
-type Friend = { id: string; username: string; status: "AVAILABLE" | "UNAVAILABLE" | null };
+type Friend = { id: string; username: string; status: "AVAILABLE" | "UNAVAILABLE" | null; avatarUrl?: string | null };
 
 export default function AvatarRingRow({ friends }: { friends: Friend[] }) {
   const sorted = [...friends].sort((a, b) => {
@@ -13,8 +13,11 @@ export default function AvatarRingRow({ friends }: { friends: Friend[] }) {
         const cold = f.status === "UNAVAILABLE";
         return (
           <div key={f.id} className="avatar-ring-item" title={f.username}>
-            <div className={`avatar-ring-circle ${hot ? "hot" : cold ? "cold" : ""}`}>
-              {f.username.slice(0, 1).toUpperCase()}
+            <div
+              className={`avatar-ring-circle ${hot ? "hot" : cold ? "cold" : ""}`}
+              style={f.avatarUrl ? { backgroundImage: `url(${f.avatarUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+            >
+              {!f.avatarUrl && f.username.slice(0, 1).toUpperCase()}
               {cold && <span className="avatar-ring-zzz">zZ</span>}
             </div>
           </div>

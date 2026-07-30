@@ -40,6 +40,7 @@ export default async function DashboardPage() {
       id: friend.id,
       username: friend.username,
       status: effectiveDrinkStatus(friend.drinkStatus, friend.drinkStatusDate),
+      avatarUrl: friend.avatarUrl,
     };
   });
 
@@ -70,7 +71,18 @@ export default async function DashboardPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="P'tite bière ?" className="brand-logo" />
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Link
+            href={`/u/${user.username}`}
+            title="Ton profil"
+            style={
+              user.avatarUrl
+                ? { width: 34, height: 34, borderRadius: "50%", border: "2px solid var(--amber)", backgroundImage: `url(${user.avatarUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
+                : { width: 34, height: 34, borderRadius: "50%", border: "2px solid var(--amber)", background: "var(--ink-3)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "Anton, sans-serif", fontSize: 13, color: "var(--foam)", textDecoration: "none" }
+            }
+          >
+            {!user.avatarUrl && user.username.slice(0, 1).toUpperCase()}
+          </Link>
           <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
           <NotificationBell />
           <LogoutButton />

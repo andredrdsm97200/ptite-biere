@@ -27,6 +27,10 @@ model User {
   // Abonnement aux notifications push (JSON stringifié : endpoint + clés)
   pushSubscription String?
 
+  // Photo de profil : petite vignette carrée, stockée en data URL directement
+  // (pas de service de stockage externe à configurer).
+  avatarUrl String?
+
   // Défi temporaire WebAuthn (Face ID / biométrie), le temps d'une cérémonie
   // d'enregistrement ou de connexion. Effacé juste après usage.
   currentChallenge String?

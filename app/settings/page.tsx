@@ -8,6 +8,7 @@ import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import DeleteAccountForm from "@/components/DeleteAccountForm";
 import AdminSelfPardon from "@/components/AdminSelfPardon";
+import AvatarUpload from "@/components/AvatarUpload";
 import { IconSettings } from "@/components/icons";
 import { isAdminUser } from "@/lib/admin";
 
@@ -33,9 +34,12 @@ export default async function SettingsPage() {
       </div>
 
       <div className="container">
+        <div className="section-title" style={{ marginTop: 0 }}>Ta photo</div>
+        <AvatarUpload currentAvatarUrl={me.avatarUrl} />
+
         {isAdminUser(me) && mood === "cursed" && (
           <>
-            <div className="section-title" style={{ marginTop: 0 }}>Toi seul vois ceci</div>
+            <div className="section-title">Toi seul vois ceci</div>
             <AdminSelfPardon />
           </>
         )}

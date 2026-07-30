@@ -1,7 +1,7 @@
 import CollectiveChopeGauge from "./CollectiveChopeGauge";
 import AvatarRingRow from "./AvatarRingRow";
 
-type Friend = { id: string; username: string; status: "AVAILABLE" | "UNAVAILABLE" | null };
+type Friend = { id: string; username: string; status: "AVAILABLE" | "UNAVAILABLE" | null; avatarUrl?: string | null };
 
 const DECLIC_THRESHOLD = 5;
 
