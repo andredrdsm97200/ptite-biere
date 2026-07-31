@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IconBeer, IconUsers, IconTrophy, IconUser } from "./icons";
+import { IconBeer, IconUsers, IconPin, IconUser } from "./icons";
 
 // Viewbox fixe + preserveAspectRatio="none" : le tracé s'étire exactement
 // sur la largeur réelle de la barre, donc l'encoche reste alignée avec la
@@ -41,8 +41,8 @@ export default function BottomNav({ username }: { username?: string }) {
 
   const tabs = [
     { href: "/", Icon: IconBeer, label: "Accueil", badgeKey: "invites" as const },
-    { href: "/friends", Icon: IconUsers, label: "Teams", badgeKey: "friendRequests" as const },
-    { href: "/leaderboard", Icon: IconTrophy, label: "Chope", badgeKey: null },
+    { href: "/friends", Icon: IconUsers, label: "Amis", badgeKey: "friendRequests" as const },
+    { href: "/organize", Icon: IconPin, label: "Organiser", badgeKey: null },
     { href: username ? `/u/${username}` : "/settings", Icon: IconUser, label: "Profil", badgeKey: null },
   ];
 

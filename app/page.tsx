@@ -56,15 +56,6 @@ export default async function DashboardPage() {
     myRank = hotWithDates.findIndex((f) => f.id === user.id) + 1;
   }
 
-  // "🔥 X soirées cette semaine" : invitations (organisées ou rejointes) sur les 7 derniers jours.
-  const weekAgo = new Date();
-  weekAgo.setDate(weekAgo.getDate() - 7);
-  const [hostedThisWeek, joinedThisWeek] = await Promise.all([
-    prisma.invite.count({ where: { hostId: user.id, createdAt: { gte: weekAgo } } }),
-    prisma.inviteRecipient.count({ where: { userId: user.id, status: "JOINED", invite: { createdAt: { gte: weekAgo } } } }),
-  ]);
-  const soireesThisWeek = hostedThisWeek + joinedThisWeek;
-
   // La soirée du jour disparaît de l'accueil à 5h du matin (mais reste en
   // base pour les classements et les malédictions du lendemain).
   const { start, end } = gameDayRange();
@@ -111,12 +102,6 @@ export default async function DashboardPage() {
       </div>
 
       <div className="container">
-        {soireesThisWeek > 0 && (
-          <p className="streak-line">
-            🔥 <strong>{soireesThisWeek}</strong> soirée{soireesThisWeek > 1 ? "s" : ""} cette semaine
-          </p>
-        )}
-
         <AvailabilitySummary friends={friendsWithStatus} />
 
         <DrinkStatusToggle initialStatus={myStatus} />
