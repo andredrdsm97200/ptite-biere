@@ -4,13 +4,10 @@ import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { effectiveDrinkStatus } from "@/lib/drinkStatus";
 import { getFriendStatuses, getCursedTodayIds } from "@/lib/invitable";
-import LogoutButton from "@/components/LogoutButton";
-import NotificationBell from "@/components/NotificationBell";
-import Link from "next/link";
+import ProfileMenu from "@/components/ProfileMenu";
 import BottomNav from "@/components/BottomNav";
 import InviteComposer from "@/components/InviteComposer";
 import MoodEffects from "@/components/MoodEffects";
-import { IconSettings } from "@/components/icons";
 
 export default async function NewInvitePage() {
   const me = await getCurrentUser();
@@ -52,11 +49,7 @@ export default async function NewInvitePage() {
         <div className="brand">
           <span className="brand-mark">📣</span> Lancer un appel
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
-          <NotificationBell />
-          <LogoutButton />
-        </div>
+        <ProfileMenu username={me.username} avatarUrl={me.avatarUrl} />
       </div>
       <div className="container">
         <InviteComposer

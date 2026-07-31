@@ -1,15 +1,12 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
-import LogoutButton from "@/components/LogoutButton";
-import NotificationBell from "@/components/NotificationBell";
-import Link from "next/link";
+import ProfileMenu from "@/components/ProfileMenu";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import DeleteAccountForm from "@/components/DeleteAccountForm";
 import AdminSelfPardon from "@/components/AdminSelfPardon";
 import AvatarUpload from "@/components/AvatarUpload";
-import { IconSettings } from "@/components/icons";
 import { isAdminUser } from "@/lib/admin";
 
 export default async function SettingsPage() {
@@ -26,11 +23,7 @@ export default async function SettingsPage() {
         <div className="brand">
           <span className="brand-mark">⚙️</span> Réglages
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
-          <NotificationBell />
-          <LogoutButton />
-        </div>
+        <ProfileMenu username={me.username} avatarUrl={me.avatarUrl} />
       </div>
 
       <div className="container">

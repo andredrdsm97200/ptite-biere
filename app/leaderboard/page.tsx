@@ -6,15 +6,14 @@ import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle, bestHosts, hottestStreaks, mostUnavailable, mostCursed, RankRow } from "@/lib/leaderboard";
 import { getBadgeMap, globalScores } from "@/lib/badges";
 import { gameDayKey } from "@/lib/gameDay";
-import LogoutButton from "@/components/LogoutButton";
-import NotificationBell from "@/components/NotificationBell";
+import ProfileMenu from "@/components/ProfileMenu";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import AutoRefresh from "@/components/AutoRefresh";
 import BadgeChip from "@/components/BadgeChip";
 import BadgeInline from "@/components/BadgeInline";
 import CurseButton from "@/components/CurseButton";
-import { IconSettings, IconFlame, IconCrown } from "@/components/icons";
+import { IconFlame, IconCrown } from "@/components/icons";
 
 function RankingList({
   rows,
@@ -98,11 +97,7 @@ export default async function LeaderboardPage() {
         <div className="brand">
           <span className="brand-mark">🏆</span> Classement
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
-          <NotificationBell />
-          <LogoutButton />
-        </div>
+        <ProfileMenu username={me.username} avatarUrl={me.avatarUrl} />
       </div>
 
       <div className="container">

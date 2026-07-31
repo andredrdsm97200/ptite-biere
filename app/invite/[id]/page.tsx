@@ -1,13 +1,11 @@
 import { redirect, notFound } from "next/navigation";
-import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
 import { getChopeMap } from "@/lib/chope";
-import LogoutButton from "@/components/LogoutButton";
-import NotificationBell from "@/components/NotificationBell";
+import ProfileMenu from "@/components/ProfileMenu";
 import BottomNav from "@/components/BottomNav";
 import InviteActions from "@/components/InviteActions";
 import CurseButton from "@/components/CurseButton";
@@ -17,7 +15,7 @@ import BadgeInline from "@/components/BadgeInline";
 import CancelInviteButton from "@/components/CancelInviteButton";
 import EventGauge from "@/components/EventGauge";
 import ParticipantAvatars from "@/components/ParticipantAvatars";
-import { IconSettings, IconPin } from "@/components/icons";
+import { IconPin } from "@/components/icons";
 
 const statusLabel: Record<string, { text: string; className: string }> = {
   SENT: { text: "Pas encore vu", className: "pill" },
@@ -72,11 +70,7 @@ export default async function InvitePage({ params }: { params: { id: string } })
         <div className="brand">
           <span className="brand-mark">🍺</span> Invitation
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
-          <NotificationBell />
-          <LogoutButton />
-        </div>
+        <ProfileMenu username={me.username} avatarUrl={me.avatarUrl} />
       </div>
 
       <div className="container">

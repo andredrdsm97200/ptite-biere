@@ -4,14 +4,11 @@ import { prisma } from "@/lib/db";
 import { getUserMood, isCurseFresh } from "@/lib/mood";
 import { getCircle, bestHosts, hottestStreaks, mostUnavailable, mostCursed } from "@/lib/leaderboard";
 import { getChope } from "@/lib/chope";
-import LogoutButton from "@/components/LogoutButton";
-import NotificationBell from "@/components/NotificationBell";
-import Link from "next/link";
+import ProfileMenu from "@/components/ProfileMenu";
 import BottomNav from "@/components/BottomNav";
 import MoodEffects from "@/components/MoodEffects";
 import BadgeChip from "@/components/BadgeChip";
 import ChopeCard from "@/components/ChopeCard";
-import { IconSettings } from "@/components/icons";
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
   const me = await getCurrentUser();
@@ -54,11 +51,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
         <div className="brand">
           <span className="brand-mark">👤</span> {profileUser.username}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
-          <NotificationBell />
-          <LogoutButton />
-        </div>
+        <ProfileMenu username={me.username} avatarUrl={me.avatarUrl} />
       </div>
 
       <div className="container">

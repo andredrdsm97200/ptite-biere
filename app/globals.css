@@ -582,6 +582,109 @@ textarea {
   font-weight: 700;
 }
 
+.profile-menu {
+  position: relative;
+}
+
+.profile-menu-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--amber);
+  background: var(--ink-3) center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Anton", sans-serif;
+  font-size: 13px;
+  color: var(--foam);
+  cursor: pointer;
+  padding: 0;
+}
+
+.profile-menu-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 230px;
+  background: var(--ink-2);
+  border: 1px solid rgba(242, 238, 230, 0.08);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  animation: profileMenuIn 0.16s ease both;
+}
+
+@keyframes profileMenuIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 10px 8px;
+  border-radius: 10px;
+  color: var(--foam);
+  font-family: "Nunito", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.profile-menu-item:hover {
+  background: var(--ink-3);
+}
+.profile-menu-item:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.profile-menu-item.danger {
+  color: var(--decline);
+  border-top: 1px solid rgba(242, 238, 230, 0.08);
+  margin-top: 4px;
+  padding-top: 12px;
+}
+.profile-menu-item div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.profile-menu-item div strong {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-menu-item div span {
+  font-size: 11px;
+  color: var(--foam-dim);
+  font-weight: 600;
+}
+.profile-menu-ico {
+  display: flex;
+  color: var(--foam-dim);
+  flex-shrink: 0;
+}
+.profile-menu-avatar-sm {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--ink-3) center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Anton", sans-serif;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
 /* ---------------------------------------------------------------
    Humeur du moment — le thème réagit au statut "chaud" / "pas chaud" /
    maudit. Les variables de couleur sont redéfinies localement sur le

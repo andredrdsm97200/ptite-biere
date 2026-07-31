@@ -6,16 +6,13 @@ import { effectiveDrinkStatus } from "@/lib/drinkStatus";
 import { getCircle } from "@/lib/leaderboard";
 import { getBadgeMap } from "@/lib/badges";
 import { getChopeMap } from "@/lib/chope";
-import LogoutButton from "@/components/LogoutButton";
-import NotificationBell from "@/components/NotificationBell";
-import Link from "next/link";
+import ProfileMenu from "@/components/ProfileMenu";
 import BottomNav from "@/components/BottomNav";
 import FriendsManager from "@/components/FriendsManager";
 import TeamsManager from "@/components/TeamsManager";
 import ContactsFinder from "@/components/ContactsFinder";
 import PhoneSetup from "@/components/PhoneSetup";
 import MoodEffects from "@/components/MoodEffects";
-import { IconSettings } from "@/components/icons";
 
 export default async function FriendsPage() {
   const me = await getCurrentUser();
@@ -74,11 +71,7 @@ export default async function FriendsPage() {
         <div className="brand">
           <span className="brand-mark">👥</span> Amis
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
-          <NotificationBell />
-          <LogoutButton />
-        </div>
+        <ProfileMenu username={me.username} avatarUrl={me.avatarUrl} />
       </div>
       <div className="container">
         {!me.phone && <PhoneSetup />}

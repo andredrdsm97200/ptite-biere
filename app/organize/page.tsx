@@ -2,12 +2,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import LogoutButton from "@/components/LogoutButton";
-import NotificationBell from "@/components/NotificationBell";
+import ProfileMenu from "@/components/ProfileMenu";
 import BottomNav from "@/components/BottomNav";
 import CancelInviteButton from "@/components/CancelInviteButton";
 import EditInviteForm from "@/components/EditInviteForm";
-import { IconSettings, IconPin } from "@/components/icons";
+import { IconPin } from "@/components/icons";
 
 export default async function OrganizePage() {
   const me = await getCurrentUser();
@@ -36,11 +35,7 @@ export default async function OrganizePage() {
         <div className="brand">
           <span className="brand-mark">📍</span> Organiser
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Link href="/settings" className="nav-link" style={{ padding: "6px 8px", display: "flex", color: "var(--foam-dim)" }} title="Réglages"><IconSettings size={19} /></Link>
-          <NotificationBell />
-          <LogoutButton />
-        </div>
+        <ProfileMenu username={me.username} avatarUrl={me.avatarUrl} />
       </div>
 
       <div className="scroll">
