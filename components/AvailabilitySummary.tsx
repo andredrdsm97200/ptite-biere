@@ -1,5 +1,4 @@
 import CollectiveChopeGauge from "./CollectiveChopeGauge";
-import AvatarRingRow from "./AvatarRingRow";
 
 type Friend = { id: string; username: string; status: "AVAILABLE" | "UNAVAILABLE" | null; avatarUrl?: string | null };
 
@@ -30,10 +29,6 @@ export default function AvailabilitySummary({ friends }: { friends: Friend[] }) 
       {hot.length >= DECLIC_THRESHOLD && (
         <p className="availability-hype">🎉 C'est le moment de sortir ! 🎉</p>
       )}
-
-      <div className="availability-avatars">
-        <AvatarRingRow friends={friends} />
-      </div>
     </div>
   );
 }
