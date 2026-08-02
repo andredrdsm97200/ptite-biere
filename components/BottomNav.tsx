@@ -92,7 +92,7 @@ export default function BottomNav({ username }: { username?: string }) {
         const Icon = tab.Icon;
         return (
           <Link key={tab.label} href={tab.href} className={active ? "active" : ""}>
-            <span className="icon" style={{ position: "relative" }}>
+            <span className="icon">
               <Icon />
               {count > 0 && <span className="nav-badge">{count > 9 ? "9+" : count}</span>}
             </span>

@@ -31,6 +31,10 @@ model User {
   // (pas de service de stockage externe à configurer).
   avatarUrl String?
 
+  // Passe à true dès qu'on détecte une fois le mode "standalone" (ouverte
+  // depuis l'écran d'accueil) — jamais remis à false ensuite.
+  pwaInstalled Boolean @default(false)
+
   // Défi temporaire WebAuthn (Face ID / biométrie), le temps d'une cérémonie
   // d'enregistrement ou de connexion. Effacé juste après usage.
   currentChallenge String?

@@ -14,6 +14,7 @@ import AutoRefresh from "@/components/AutoRefresh";
 import PlansSection from "@/components/PlansSection";
 import AvailabilitySummary from "@/components/AvailabilitySummary";
 import QuickActionCards from "@/components/QuickActionCards";
+import InstallBanner from "@/components/InstallBanner";
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
@@ -84,6 +85,8 @@ export default async function DashboardPage() {
       </div>
 
       <div className="container">
+        <InstallBanner pwaInstalled={user.pwaInstalled} />
+
         <AvailabilitySummary friends={friendsWithStatus} />
 
         <DrinkStatusToggle initialStatus={myStatus} />
